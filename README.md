@@ -56,7 +56,7 @@ If you want to install the packages yourself in case something does not work, th
 We support multiple input formats depending on whether you only want to make predictions for a single complex or for many at once.\
 The protein inputs need to be .pdb files. The ligand input can either be a SMILES string or a filetype that RDKit can read like `.sdf` or `.mol2`.
 
-For a single complex: specify the protein with, e.g., `--protein_path protein.pdb` and the ligand with `--ligand_path ligand.sdf` or `--ligand_smiles COc(cc1)ccc1C#N`
+For a single complex: specify the protein with, e.g., `--protein_path protein.pdb` and the ligand with `--ligand ligand.sdf` or `--ligand COc(cc1)ccc1C#N`
 
 For many complexes: create a csv file with paths to proteins and ligand files or SMILES. The first column of the .csv has to be called `protein_path` and the second one `ligand`.
 An example .csv is at `data/protein_ligand_example_csv.csv` and you would use it with `--protein_ligand_csv protein_ligand_example_csv.csv`.
