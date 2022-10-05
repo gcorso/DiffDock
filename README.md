@@ -1,5 +1,6 @@
 # DiffDock: Diffusion Steps, Twists, and Turns for Molecular Docking
 
+### [Paper on arXiv](https://arxiv.org/abs/2210.01776)
 
 Implementation of DiffDock, state-of-the-art method for molecular docking, by Gabriele Corso*, Hannes Stark*, Bowen Jing*, Regina Barzilay and Tommi Jaakkola.
 This repository contains all code, instructions and model weights necessary to run the method or to retrain a model. 
@@ -129,5 +130,16 @@ Now everything is trained and you can run inference with:
 
     python -m evaluate --model_dir workdir/big_score_model --ckpt best_ema_inference_epoch_model.pt --confidence_ckpt best_model_epoch75.pt --confidence_model_dir workdir/confidence_model --run_name DiffDockInference --inference_steps 20 --split_path data/splits/timesplit_test --samples_per_complex 40 --batch_size 10
 
+
+## Citation
+    @article{corso2022diffdock,
+          title={DiffDock: Diffusion Steps, Twists, and Turns for Molecular Docking}, 
+          author = {Corso, Gabriele and Stärk, Hannes and Jing, Bowen and Barzilay, Regina and Jaakkola, Tommi},
+          journal={arXiv preprint arXiv:2210.01776},
+          year={2022}
+    }
+
+## License
+MIT
 
 ![Alt Text](visualizations/example_6agt_symmetric.gif)
