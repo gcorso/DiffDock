@@ -518,8 +518,9 @@ def read_molecule(molecule_file, sanitize=False, calc_charges=False, remove_hs=F
 
         if remove_hs:
             mol = Chem.RemoveHs(mol, sanitize=sanitize)
-    except:
-        return None
+    except Exception as e:
+        print(e)
+        exit("could not process mol")
 
     return mol
 
