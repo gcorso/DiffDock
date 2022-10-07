@@ -54,8 +54,10 @@ for name in tqdm(names):
     if name == '.DS_Store': continue
     if os.path.exists(os.path.join(data_dir, name, f'{name}_protein_processed.pdb')):
         rec_path = os.path.join(data_dir, name, f'{name}_protein_processed.pdb')
-    else:
+    elif os.path.exists(os.path.join(data_dir, name, f'{name}_protein.pdb')):
         rec_path = os.path.join(data_dir, name, f'{name}_protein.pdb')
+    else:
+        continue
     if cutoff > 10:
         rec_path = os.path.join(data_dir, name, f'{name}_protein_obabel_reduce.pdb')
         if not os.path.exists(rec_path):
