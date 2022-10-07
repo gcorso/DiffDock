@@ -318,7 +318,6 @@ class PDBBind(Dataset):
             except Exception as e:
                 print(f'Skipping {name} because of the error:')
                 print(e)
-                raise e
                 continue
 
             protein_center = torch.mean(complex_graph['receptor'].pos, dim=0, keepdim=True)
