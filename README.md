@@ -18,7 +18,7 @@ Additionally, there are visualization videos in `visualizations`.
 The files in `data` contain the names for the time-based data split.
 
 If you want to train one of our models with the data then: 
-1. download it from [zenodo](https://zenodo.org/record/6034088) 
+1. download it from [zenodo](https://zenodo.org/record/6408497) 
 2. unzip the directory and place it into `data` such that you have the path `data/PDBBind_processed`
 
 
