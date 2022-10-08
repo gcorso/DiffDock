@@ -1,4 +1,4 @@
-# From github user cwlchka
+# Modified from github user cwlchka
 
 FROM nvcr.io/nvidia/cuda:11.1.1-cudnn8-devel-ubuntu20.04
 
