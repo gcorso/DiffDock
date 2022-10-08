@@ -26,12 +26,19 @@ RUN pip install --no-cache-dir pyg==0.7.1 \
                                e3nn==0.5.0 \
                                spyrmsd==0.5.2 \
                                pandas==1.3.5 \
-                               biopandas==0.4.1 \
-                               torch==1.12.1+cu113 --quiet
+                               biopandas==0.4.1 --quiet
 
 RUN echo "alias python=python3" >> ~/.bashrc
 RUN alias python=python3
-RUN python -m pip install pytest
+RUN python -m pip install pytest 
+# Install Jupyter kernel and jupyternotebook
+RUN pip install --no-cache-dir notebook
+RUN python -m pip install --no-cache-dir ipykernel 
+RUN python -m ipykernel install --user --name=DiffDock
+#WORKDIR /app
 
-WORKDIR /app
-ENTRYPOINT bash
+#RUN cd /app && git clone https://github.com/gcorso/DiffDock.git && cd /app/DiffDock && git checkout 0f9c419
+
+#WORKDIR /app/DiffDock
+
+#ENTRYPOINT bash
