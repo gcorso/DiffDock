@@ -21,7 +21,15 @@ If you want to train one of our models with the data then:
 1. download it from [zenodo](https://zenodo.org/record/6408497) 
 2. unzip the directory and place it into `data` such that you have the path `data/PDBBind_processed`
 
+## Singularity
 
+We provide a singularity container with all the dependencies installed.
+To use it, you need to have singularity installed on your machine.
+Then, you can run the following command to start a shell in the container:
+
+```bash
+singularity run --cleanenv --nv -B $PWD:/home/ diffdock.sif
+```
 
 ## Setup Environment
 
