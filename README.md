@@ -100,12 +100,24 @@ Then run the command:
     python datasets/esm_embeddings_to_pt.py
 
 ### Using the provided model weights for evaluation
+We first generate the language model embeddings for the testset, then run inference with DiffDock, and then evaluate the files that DiffDock produced:
+
+    python datasets/esm_embedding_preparation.py --protein_ligand_csv data/testset_csv.csv --out_file data/prepared_for_esm_testset.fasta
+    git clone https://github.com/facebookresearch/esm 
+    cd esm
+    pip install -e .
+    cd ..
+    HOME=esm/model_weights python esm/scripts/extract.py esm2_t33_650M_UR50D data/prepared_for_esm_testset.fasta data/esm2_output --repr_layers 33 --include per_tok
+    python -m inference --protein_ligand_csv data/testset_csv.csv --out_dir results/user_predictions_testset --inference_steps 20 --samples_per_complex 40 --batch_size 10
+    python evaluate_files --results_path results/user_predictions_testset --file_to_exclude rank1.sdf
+
+<!--
 To predict binding structures using the provided model weights run: 
 
     python -m evaluate --model_dir workdir/paper_score_model --ckpt best_ema_inference_epoch_model.pt --confidence_ckpt best_model_epoch75.pt --confidence_model_dir workdir/paper_confidence_model --run_name DiffDockInference --inference_steps 20 --split_path data/splits/timesplit_test --samples_per_complex 40 --batch_size 10
 
 To additionally save the .sdf files of the generated molecules, add the flag `--save_visualisation`
-
+-->
 ### Training a model yourself and using those weights
 Train the large score model:
 
