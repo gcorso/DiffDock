@@ -1,24 +1,21 @@
 # Modified from github user cwlchka
 
-FROM nvcr.io/nvidia/cuda:11.1.1-cudnn8-devel-ubuntu20.04
+FROM pytorch/pytorch:1.12.1-cuda11.3-cudnn8-devel
 
 RUN apt-get update && \
     apt-get install -y sudo \
-                       python-is-python3 \
                        python3-pip \
-                       git
-
-RUN pip3 install --no-cache-dir torch==1.9.0+cu111 torchvision==0.10.0+cu111 torchaudio==0.9.0 -f https://download.pytorch.org/whl/torch_stable.html
-
-RUN pip install --no-cache-dir torch-scatter -f https://pytorch-geometric.com/whl/torch-1.9.0+cu111.html
-RUN pip install --no-cache-dir torch-sparse -f https://pytorch-geometric.com/whl/torch-1.9.0+cu111.html
-RUN pip install --no-cache-dir torch-cluster -f https://pytorch-geometric.com/whl/torch-1.9.0+cu111.html
-RUN pip install --no-cache-dir torch-spline-conv -f https://pytorch-geometric.com/whl/torch-1.9.0+cu111.html
-RUN pip install --no-cache-dir torch-geometric
+                       git  \
+                       curl
 
 
-RUN pip install --no-cache-dir pyg==0.7.1 \
-                               pyyaml==6.0 \
+RUN pip install torch-scatter torch-sparse torch-cluster torch-spline-conv torch-geometric -f https://data.pyg.org/whl/torch-1.12.0+cu113.html
+RUN pip install --no-cache-dir torch-spline-conv==1.2.1 -f https://data.pyg.org/whl/torch-1.12.0+cu113.html
+#RUN pip install --no-cache-dir torch-cluster==1.6.0 -f https://data.pyg.org/whl/torch-1.9.0+cu111.html
+#RUN pip install --no-cache-dir torch-geometric
+
+
+RUN pip install --no-cache-dir pyyaml==6.0 \
                                scipy==1.7.3 \
                                networkx==2.6.3 \
                                biopython==1.79 \
@@ -35,10 +32,21 @@ RUN python -m pip install pytest
 RUN pip install --no-cache-dir notebook
 RUN python -m pip install --no-cache-dir ipykernel 
 RUN python -m ipykernel install --user --name=DiffDock
-#WORKDIR /app
 
-#RUN cd /app && git clone https://github.com/gcorso/DiffDock.git && cd /app/DiffDock && git checkout 0f9c419
 
-#WORKDIR /app/DiffDock
+WORKDIR /app
 
-#ENTRYPOINT bash
+RUN cd /app && git clone https://github.com/gcorso/DiffDock.git && cd /app/DiffDock && git checkout 0f9c419
+
+WORKDIR /app/DiffDock
+
+RUN cd /app/DiffDock && \
+    git clone https://github.com/facebookresearch/esm && \
+    cd esm && \
+    git checkout f07aed6 && \
+    pip install -e . && \
+    cd /app/DiffDock
+
+
+
+ENTRYPOINT bash
