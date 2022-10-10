@@ -1,4 +1,5 @@
 # DiffDock: Diffusion Steps, Twists, and Turns for Molecular Docking
+[![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/diffdock-diffusion-steps-twists-and-turns-for/blind-docking-on-pdbbind)](https://paperswithcode.com/sota/blind-docking-on-pdbbind?p=diffdock-diffusion-steps-twists-and-turns-for)
 
 ### [Paper on arXiv](https://arxiv.org/abs/2210.01776)
 
