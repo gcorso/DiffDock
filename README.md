@@ -12,7 +12,7 @@ If you have any question, feel free to open an issue or reach out to us: [gcorso
 The repository also contains all the scripts to run the baselines and generate the figures.
 Additionally, there are visualization videos in `visualizations`.
 
-You might also be interested in this awesome [interactive online tool](https://huggingface.co/spaces/simonduerr/diffdock) by Simon Duerr on Hugging Face for running DiffDock and visualising the predicted structures on your browser. Instead, Brian Naughton made a [Google Colab notebook](https://colab.research.google.com/drive/1nvCyQkbO-TwXZKJ0RCShVEym1aFWxlkX) to run DiffDock. 
+You might also be interested in this awesome [interactive online tool](https://huggingface.co/spaces/simonduerr/diffdock) by Simon Duerr on Hugging Face for running DiffDock and visualising the predicted structures on your browser, however note that this does not use the optimal hyperparameters for the reverse diffusion which instead are provided below. Instead, Brian Naughton made a [Google Colab notebook](https://colab.research.google.com/drive/1nvCyQkbO-TwXZKJ0RCShVEym1aFWxlkX) to run DiffDock. 
 
 
 
