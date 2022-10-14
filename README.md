@@ -112,7 +112,7 @@ We first generate the language model embeddings for the testset, then run infere
     cd ..
     HOME=esm/model_weights python esm/scripts/extract.py esm2_t33_650M_UR50D data/prepared_for_esm_testset.fasta data/esm2_output --repr_layers 33 --include per_tok
     python -m inference --protein_ligand_csv data/testset_csv.csv --out_dir results/user_predictions_testset --inference_steps 20 --samples_per_complex 40 --batch_size 10 --actual_steps 18 --no_final_step_noise
-    python evaluate_files.py --results_path results/user_predictions_testset --file_to_exclude rank1.sdf
+    python evaluate_files.py --results_path results/user_predictions_testset --file_to_exclude rank1.sdf --num_predictions 40
 
 <!--
 To predict binding structures using the provided model weights run: 
