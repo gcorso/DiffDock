@@ -19,6 +19,10 @@ from utils.sampling import randomize_position, sampling
 from utils.utils import get_model
 from utils.visualise import PDBFile
 from tqdm import tqdm
+import pathlib,os
+
+# determine the path of script
+script_pth=pathlib.Path(os.path.realpath(__file__)).resolve().parent
 
 RDLogger.DisableLog('rdApp.*')
 import yaml
@@ -32,9 +36,9 @@ parser.add_argument('--esm_embeddings_path', type=str, default='data/esm2_output
 parser.add_argument('--save_visualisation', action='store_true', default=False, help='Save a pdb file with all of the steps of the reverse diffusion')
 parser.add_argument('--samples_per_complex', type=int, default=10, help='Number of samples to generate')
 
-parser.add_argument('--model_dir', type=str, default='workdir/paper_score_model', help='Path to folder with trained score model and hyperparameters')
+parser.add_argument('--model_dir', type=str, default=script_pth.joinpath('workdir/paper_score_model'), help='Path to folder with trained score model and hyperparameters')
 parser.add_argument('--ckpt', type=str, default='best_ema_inference_epoch_model.pt', help='Checkpoint to use for the score model')
-parser.add_argument('--confidence_model_dir', type=str, default='workdir/paper_confidence_model', help='Path to folder with trained confidence model and hyperparameters')
+parser.add_argument('--confidence_model_dir', type=str, default=script_pth.joinpath('workdir/paper_confidence_model'), help='Path to folder with trained confidence model and hyperparameters')
 parser.add_argument('--confidence_ckpt', type=str, default='best_model_epoch75.pt', help='Checkpoint to use for the confidence model')
 
 parser.add_argument('--batch_size', type=int, default=32, help='')
@@ -68,6 +72,8 @@ if args.confidence_model_dir is not None:
         confidence_args = Namespace(**yaml.full_load(f))
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+
+os.makedirs(args.cache_path,exist_ok=True)
 
 if args.protein_ligand_csv is not None:
     df = pd.read_csv(args.protein_ligand_csv)
