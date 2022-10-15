@@ -52,7 +52,7 @@ fi
 pdb_basename=$(basename $protein_pdb)
 instance=${pdb_basename%.pdb}
 
-protein_pdb=$(readlink -f $protein_pdb)
+#protein_pdb=$(readlink -f $protein_pdb)
 
 
 if [[ -f "$ligand" ]];then
@@ -104,20 +104,20 @@ echo "$cmd"
 eval "$cmd"
 
 # evaluate
-cmd="python ${DIFF_DOCK_HOME}evaluate_files.py \
-  --results_path ${save_dir}/user_predictions_small \
-  --file_to_exclude rank1.sdf
-	"
 
 
 cmd="python  ${DIFF_DOCK_HOME}/evaluate.py \
-  --model_dir workdir/paper_score_model \
-  --ckpt best_ema_inference_epoch_model.pt \
-  --confidence_ckpt best_model_epoch75.pt \
-  --confidence_model_dir workdir/paper_confidence_model \
   --run_name DiffDockInference \
   --inference_steps 20 \
   --split_path data/splits/timesplit_test \
   --samples_per_complex 40 --batch_size 10 \
-  --save_visualisation
+  --save_visualisation \
+  --num_cpu ${nproc} \
+  --tqdm \
+  --project ligandbinding_test_ \
+  --samples_per_complex 10 \
+  --data_dir
 "
+
+#echo "$cmd"
+#eval "$cmd"

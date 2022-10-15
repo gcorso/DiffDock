@@ -51,6 +51,7 @@ parser.add_argument('--num_workers', type=int, default=1, help='Number of worker
 parser.add_argument('--sigma_schedule', type=str, default='expbeta', help='')
 parser.add_argument('--actual_steps', type=int, default=None, help='Number of denoising steps that are actually performed')
 parser.add_argument('--keep_local_structures', action='store_true', default=False, help='Keeps the local structure when specifying an input with 3D coordinates instead of generating them with RDKit')
+parser.add_argument('--no_gpu', action='store_true', default=False, help='Dont use GPU even it is available')
 args = parser.parse_args()
 if args.config:
     config_dict = yaml.load(args.config, Loader=yaml.FullLoader)
@@ -71,7 +72,7 @@ if args.confidence_model_dir is not None:
     with open(f'{args.confidence_model_dir}/model_parameters.yml') as f:
         confidence_args = Namespace(**yaml.full_load(f))
 
-device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+device = torch.device('cuda' if torch.cuda.is_available() and not args.no_gpu else 'cpu')
 
 os.makedirs(args.cache_path,exist_ok=True)
 
