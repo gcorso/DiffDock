@@ -93,31 +93,15 @@ eval "$cmd"
 
 cmd="python ${DIFF_DOCK_HOME}/inference.py \
   --protein_path ${protein_pdb} \
-  --out_dir ${save_dir}/user_predictions_small \
-  --inference_steps 20 \
-  --samples_per_complex 40 \
+  --ligand \"${ligand}\"\
+  --out_dir ${save_dir}/${instance} \
+  --inference_steps 100 \
+  --samples_per_complex 25 \
   --batch_size 10 \
   --num_workers ${nproc} \
-  --esm_embeddings_path ${save_dir}/${instance}_esm2_output "
+  --esm_embeddings_path ${save_dir}/${instance}_esm2_output \
+  --save_visualisation"
 
 echo "$cmd"
 eval "$cmd"
 
-# evaluate
-
-
-cmd="python  ${DIFF_DOCK_HOME}/evaluate.py \
-  --run_name DiffDockInference \
-  --inference_steps 20 \
-  --split_path data/splits/timesplit_test \
-  --samples_per_complex 40 --batch_size 10 \
-  --save_visualisation \
-  --num_cpu ${nproc} \
-  --tqdm \
-  --project ligandbinding_test_ \
-  --samples_per_complex 10 \
-  --data_dir
-"
-
-#echo "$cmd"
-#eval "$cmd"
