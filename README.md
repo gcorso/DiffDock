@@ -36,6 +36,8 @@ current repo
 Create a new environment with all required packages using `environment.yml`. While in the project directory run:
 
     conda env create
+    # For visualizing
+    conda install -c conda-forge pymol-open-source
 
 Activate the environment
 
@@ -56,6 +58,10 @@ If you want to install the packages yourself in case something does not work, th
     biopandas
 
 # Running DiffDock on your own complexes
+For simply run a docking of one ligand against one protein, use the following:
+
+    bash /repo/DiffDock/run_pipeline.sh -p protein.pdb -l ./ligand/lig/lig.sdf -L lig -n 20 -s 50 -o test
+
 We support multiple input formats depending on whether you only want to make predictions for a single complex or for many at once.\
 The protein inputs need to be .pdb files. The ligand input can either be a SMILES string or a filetype that RDKit can read like `.sdf` or `.mol2`.
 
