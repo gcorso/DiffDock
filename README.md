@@ -37,6 +37,7 @@ Create a new environment with all required packages using `environment.yml`. Whi
 
     conda env create
     # For visualizing
+    conda activate diffdock
     conda install -c conda-forge pymol-open-source
 
 Activate the environment
