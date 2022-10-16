@@ -39,11 +39,12 @@ if __name__ == '__main__':
     try:
       # cmd.load( filename [,object [,state [,format [,finish [,discrete [,multiplex ]]]]]] )
       cmd.load(filename=f'{LIGAND_FP}/rank{i}_reverseprocess.pdb',
-               state=1,
                object=f'{LIGAND_NAME}_{i}',
-               format='pdb',
-               discrete=1,
-               multiplex=0)
+               state=2,
+               #discrete=1,
+               multiplex=0,
+               )
+      cmd.do(f'h_fix {LIGAND_NAME}_{i}')
     except:
       print(f'error occurs while loading prediction #{i}.')
 
