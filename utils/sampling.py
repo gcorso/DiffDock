@@ -5,7 +5,7 @@ from torch_geometric.loader import DataLoader
 from utils.diffusion_utils import modify_conformer, set_time
 from utils.torsion import modify_conformer_torsion_angles
 from scipy.spatial.transform import Rotation as R
-
+from tqdm import tqdm
 
 def randomize_position(data_list, no_torsion, no_random, tr_sigma_max):
     # in place modification of the list
@@ -36,7 +36,7 @@ def sampling(data_list, model, inference_steps, tr_schedule, rot_schedule, tor_s
              confidence_model_args=None, batch_size=32, no_final_step_noise=False):
     N = len(data_list)
 
-    for t_idx in range(inference_steps):
+    for t_idx in tqdm(range(inference_steps),desc="Steps: "):
         t_tr, t_rot, t_tor = tr_schedule[t_idx], rot_schedule[t_idx], tor_schedule[t_idx]
         dt_tr = tr_schedule[t_idx] - tr_schedule[t_idx + 1] if t_idx < inference_steps - 1 else tr_schedule[t_idx]
         dt_rot = rot_schedule[t_idx] - rot_schedule[t_idx + 1] if t_idx < inference_steps - 1 else rot_schedule[t_idx]
