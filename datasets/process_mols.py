@@ -502,8 +502,8 @@ def read_molecule(molecule_file, sanitize=False, calc_charges=False, remove_hs=F
     elif molecule_file.endswith('.pdb'):
         mol = Chem.MolFromPDBFile(molecule_file, sanitize=False, removeHs=False)
     else:
-        return ValueError('Expect the format of the molecule_file to be '
-                          'one of .mol2, .sdf, .pdbqt and .pdb, got {}'.format(molecule_file))
+        raise ValueError('Expect the format of the molecule_file to be '
+                         'one of .mol2, .sdf, .pdbqt and .pdb, got {}'.format(molecule_file))
 
     try:
         if sanitize or calc_charges:
