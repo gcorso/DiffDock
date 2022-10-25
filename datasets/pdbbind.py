@@ -196,21 +196,29 @@ class PDBBind(Dataset):
     def inference_preprocessing(self):
         ligands_list = []
         print('Reading molecules and generating local structures with RDKit')
-        for ligand_description in tqdm(self.ligand_descriptions):
-            mol = MolFromSmiles(ligand_description)  # check if it is a smiles or a path
-            if mol is not None:
-                mol = AddHs(mol)
-                generate_conformer(mol)
-                ligands_list.append(mol)
-            else:
-                mol = read_molecule(ligand_description, remove_hs=False, sanitize=True)
-                if mol is None:
-                    raise Exception('RDKit could not read the molecule ', ligand_description)
-                if not self.keep_local_structures:
-                    mol.RemoveAllConformers()
+        failed_ligand_indices = []
+        for idx, ligand_description in tqdm(enumerate(self.ligand_descriptions)):
+            try:
+                mol = MolFromSmiles(ligand_description)  # check if it is a smiles or a path
+                if mol is not None:
                     mol = AddHs(mol)
                     generate_conformer(mol)
-                ligands_list.append(mol)
+                    ligands_list.append(mol)
+                else:
+                    mol = read_molecule(ligand_description, remove_hs=False, sanitize=True)
+                    if mol is None:
+                        raise Exception('RDKit could not read the molecule ', ligand_description)
+                    if not self.keep_local_structures:
+                        mol.RemoveAllConformers()
+                        mol = AddHs(mol)
+                        generate_conformer(mol)
+                    ligands_list.append(mol)
+            except Exception as e:
+                print('Failed to read molecule ', ligand_description, ' We are skipping it. The reason is the exception: ', e)
+                failed_ligand_indices.append(idx)
+        for index in sorted(failed_ligand_indices, reverse=True):
+            del self.protein_path_list[index]
+            del self.ligand_descriptions[index]
 
         if self.esm_embeddings_path is not None:
             print('Reading language model embeddings.')
