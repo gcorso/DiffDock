@@ -24,7 +24,7 @@ RDLogger.DisableLog('rdApp.*')
 import yaml
 parser = ArgumentParser()
 parser.add_argument('--config', type=FileType(mode='r'), default=None)
-parser.add_argument('--protein_ligand_csv', type=str, default='data/janssen_csv.csv', help='Path to a .csv file specifying the input as described in the README. If this is not None, it will be used instead of the --protein_path and --ligand parameters')
+parser.add_argument('--protein_ligand_csv', type=str, default=None, help='Path to a .csv file specifying the input as described in the README. If this is not None, it will be used instead of the --protein_path and --ligand parameters')
 parser.add_argument('--protein_path', type=str, default='data/dummy_data/1a0q_protein.pdb', help='Path to the protein .pdb file')
 parser.add_argument('--ligand', type=str, default='COc(cc1)ccc1C#N', help='Either a SMILES string or the path to a molecule file that rdkit can read')
 parser.add_argument('--out_dir', type=str, default='results/user_inference', help='Directory where the outputs will be written to')
