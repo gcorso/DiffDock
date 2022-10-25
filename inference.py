@@ -200,7 +200,7 @@ for idx, orig_complex_graph in tqdm(enumerate(test_loader)):
                     visualization_list[batch_idx].write(os.path.join(write_dir, f'rank{rank+1}_reverseprocess.pdb'))
         names_list.append(orig_complex_graph.name[0])
     except Exception as e:
-        print("Failed on", orig_complex_graph["name"], e)
+        print("Failed on", orig_complex_graph["name"],' with the error ', e)
         failures += 1
 
 print(f'Failed for {failures} complexes')

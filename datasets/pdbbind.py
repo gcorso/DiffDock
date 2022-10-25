@@ -204,6 +204,8 @@ class PDBBind(Dataset):
                 ligands_list.append(mol)
             else:
                 mol = read_molecule(ligand_description, remove_hs=False, sanitize=True)
+                if mol is None:
+                    raise Exception('RDKit could not read the molecule ', ligand_description)
                 if not self.keep_local_structures:
                     mol.RemoveAllConformers()
                     mol = AddHs(mol)
