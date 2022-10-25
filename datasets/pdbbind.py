@@ -299,6 +299,7 @@ class PDBBind(Dataset):
 
             ligs = read_mols(self.pdbbind_dir, name, remove_hs=False)
         complex_graphs = []
+        failed_indices = []
         for i, lig in enumerate(ligs):
             if self.max_lig_size is not None and lig.GetNumHeavyAtoms() > self.max_lig_size:
                 print(f'Ligand with {lig.GetNumHeavyAtoms()} heavy atoms is larger than max_lig_size {self.max_lig_size}. Not including {name} in preprocessed data.')
@@ -311,6 +312,7 @@ class PDBBind(Dataset):
                 rec, rec_coords, c_alpha_coords, n_coords, c_coords, lm_embeddings = extract_receptor_structure(copy.deepcopy(rec_model), lig, lm_embedding_chains=lm_embedding_chains)
                 if lm_embeddings is not None and len(c_alpha_coords) != len(lm_embeddings):
                     print(f'LM embeddings for complex {name} did not have the right length for the protein. Skipping {name}.')
+                    failed_indices.append(i)
                     continue
 
                 get_rec_graph(rec, rec_coords, c_alpha_coords, n_coords, c_coords, complex_graph, rec_radius=self.receptor_radius,
@@ -320,6 +322,7 @@ class PDBBind(Dataset):
             except Exception as e:
                 print(f'Skipping {name} because of the error:')
                 print(e)
+                failed_indices.append(i)
                 continue
 
             protein_center = torch.mean(complex_graph['receptor'].pos, dim=0, keepdim=True)
@@ -335,6 +338,8 @@ class PDBBind(Dataset):
 
             complex_graph.original_center = protein_center
             complex_graphs.append(complex_graph)
+        for idx_to_delete in sorted(failed_indices, reverse=True):
+            del ligs[idx_to_delete]
         return complex_graphs, ligs
 
 
