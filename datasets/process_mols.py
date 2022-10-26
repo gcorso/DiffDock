@@ -520,7 +520,7 @@ def read_molecule(molecule_file, sanitize=False, calc_charges=False, remove_hs=F
             mol = Chem.RemoveHs(mol, sanitize=sanitize)
     except Exception as e:
         print(e)
-        print("could not process mol")
+        print("RDKit was unable to read the molecule.")
         return None
 
     return mol
