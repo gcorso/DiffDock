@@ -45,6 +45,7 @@ for i, name in enumerate(tqdm(names)):
 
     if args.all_dirs_in_results:
         directory_with_name = [directory for directory in results_path_containments if name in directory][0]
+        if directory_with_name == []: print('Did not find a directory for ', name, '. We are skipping that complex')
         ligand_pos = []
         debug_paths = []
         for i in range(args.num_predictions):
