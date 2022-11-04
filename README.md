@@ -81,7 +81,7 @@ And done, that is it!
 
 ### Run inference
 
-    python -m inference --protein_ligand_csv data/protein_ligand_example_csv.csv --out_dir results/user_predictions_small --inference_steps 20 --samples_per_complex 40 --batch_size 10 --actual_steps 18 --no_final_step_noise
+    python -m inference --protein_ligand_csv data/protein_ligand_example_csv.csv --out_dir results/user_predictions_small --inference_steps 15 --samples_per_complex 10 --batch_size 10 --actual_steps 18 --no_final_step_noise
 
 
 
