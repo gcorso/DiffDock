@@ -1,7 +1,2 @@
 protein_path,ligand
 data/PDBBind_processed/6agt/6agt_protein_processed.pdb,data/PDBBind_processed/6agt/6agt_ligand.sdf
-data/PDBBind_processed/6agt/6agt_protein_processed.pdb,COc(cc1)ccc1C#N
-data/PDBBind_processed/6mo8/6mo8_protein_processed.pdb,data/PDBBind_processed/6agt/6agt_ligand.mol2
-data/PDBBind_processed/6mo8/6mo8_protein_processed.pdb,data/PDBBind_processed/6mo8/6mo8_ligand.sdf
-data/PDBBind_processed/6mo8/6mo8_protein_processed.pdb,COc(cc1)ccc1C#N
-data/PDBBind_processed/6mo8/6mo8_protein_processed.pdb,data/PDBBind_processed/6hld/6hld_ligand.mol2
