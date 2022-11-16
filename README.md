@@ -157,4 +157,9 @@ Now everything is trained and you can run inference with:
 ## License
 MIT
 
+## Acknowledgements
+
+We thank Wei Lu and Rachel Wu for pointing out some issues with the code.
+
+
 ![Alt Text](visualizations/example_6agt_symmetric.gif)
