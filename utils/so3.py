@@ -49,6 +49,7 @@ if os.path.exists('.so3_omegas_array2.npy'):
     _score_norms = np.load('.so3_score_norms2.npy')
     _exp_score_norms = np.load('.so3_exp_score_norms2.npy')
 else:
+    print("Precomputing and saving to cache SO(3) distribution table")
     _eps_array = 10 ** np.linspace(np.log10(MIN_EPS), np.log10(MAX_EPS), N_EPS)
     _omegas_array = np.linspace(0, np.pi, X_N + 1)[1:]
 
