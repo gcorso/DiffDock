@@ -85,7 +85,7 @@ And done, that is it!
 
 
 
-# Running DiffDock to reproduce paper numbers
+# Retraining DiffDock
 Download the data and place it as described in the "Dataset" section above.
 
 ### Generate the ESM2 embeddings for the proteins
