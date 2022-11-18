@@ -195,7 +195,7 @@ class PDBBind(Dataset):
 
     def inference_preprocessing(self):
         ligands_list = []
-        print('Reading molecules and generating local structures with RDKit')
+        print('Reading molecules and generating local structures with RDKit (unless --keep_local_structures is turned on).')
         failed_ligand_indices = []
         for idx, ligand_description in tqdm(enumerate(self.ligand_descriptions)):
             try:
