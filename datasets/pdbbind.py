@@ -214,6 +214,7 @@ class PDBBind(Dataset):
                         generate_conformer(mol)
                     ligands_list.append(mol)
             except Exception as e:
+
                 print('Failed to read molecule ', ligand_description, ' We are skipping it. The reason is the exception: ', e)
                 failed_ligand_indices.append(idx)
         for index in sorted(failed_ligand_indices, reverse=True):
@@ -282,6 +283,7 @@ class PDBBind(Dataset):
                     complex_graphs.extend(t[0])
                     rdkit_ligands.extend(t[1])
                     pbar.update()
+            if complex_graphs == []: raise Exception('Preprocessing did not succeed for any complex')
             with open(os.path.join(self.full_cache_path, "heterographs.pkl"), 'wb') as f:
                 pickle.dump((complex_graphs), f)
             with open(os.path.join(self.full_cache_path, "rdkit_ligands.pkl"), 'wb') as f:
