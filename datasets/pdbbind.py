@@ -405,6 +405,7 @@ def construct_loader(args, t_to_sigma):
 def read_mol(pdbbind_dir, name, remove_hs=False):
     lig = read_molecule(os.path.join(pdbbind_dir, name, f'{name}_ligand.sdf'), remove_hs=remove_hs, sanitize=True)
     if lig is None:  # read mol2 file if sdf file cannot be sanitized
+        print('Using the .sdf file failed. We found a .mol2 file instead and are trying to use that.')
         lig = read_molecule(os.path.join(pdbbind_dir, name, f'{name}_ligand.mol2'), remove_hs=remove_hs, sanitize=True)
     return lig
 
