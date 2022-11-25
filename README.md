@@ -33,7 +33,7 @@ current repo
 
     git clone https://github.com/gcorso/DiffDock.git
 
-This is an example for how to set up a working conda environment to run the code:
+This is an example for how to set up a working conda environment to run the code (but make sure to use the correct pytorch, pytorch-geometric, cuda versions or cpu only versions):
 
     conda create --name diffdock python=3.8
     conda activate diffdock
