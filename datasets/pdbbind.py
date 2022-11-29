@@ -195,20 +195,31 @@ class PDBBind(Dataset):
 
     def inference_preprocessing(self):
         ligands_list = []
-        print('Reading molecules and generating local structures with RDKit')
-        for ligand_description in tqdm(self.ligand_descriptions):
-            mol = MolFromSmiles(ligand_description)  # check if it is a smiles or a path
-            if mol is not None:
-                mol = AddHs(mol)
-                generate_conformer(mol)
-                ligands_list.append(mol)
-            else:
-                mol = read_molecule(ligand_description, remove_hs=False, sanitize=True)
-                if not self.keep_local_structures:
-                    mol.RemoveAllConformers()
+        print('Reading molecules and generating local structures with RDKit (unless --keep_local_structures is turned on).')
+        failed_ligand_indices = []
+        for idx, ligand_description in tqdm(enumerate(self.ligand_descriptions)):
+            try:
+                mol = MolFromSmiles(ligand_description)  # check if it is a smiles or a path
+                if mol is not None:
                     mol = AddHs(mol)
                     generate_conformer(mol)
-                ligands_list.append(mol)
+                    ligands_list.append(mol)
+                else:
+                    mol = read_molecule(ligand_description, remove_hs=False, sanitize=True)
+                    if mol is None:
+                        raise Exception('RDKit could not read the molecule ', ligand_description)
+                    if not self.keep_local_structures:
+                        mol.RemoveAllConformers()
+                        mol = AddHs(mol)
+                        generate_conformer(mol)
+                    ligands_list.append(mol)
+            except Exception as e:
+
+                print('Failed to read molecule ', ligand_description, ' We are skipping it. The reason is the exception: ', e)
+                failed_ligand_indices.append(idx)
+        for index in sorted(failed_ligand_indices, reverse=True):
+            del self.protein_path_list[index]
+            del self.ligand_descriptions[index]
 
         if self.esm_embeddings_path is not None:
             print('Reading language model embeddings.')
@@ -272,6 +283,7 @@ class PDBBind(Dataset):
                     complex_graphs.extend(t[0])
                     rdkit_ligands.extend(t[1])
                     pbar.update()
+            if complex_graphs == []: raise Exception('Preprocessing did not succeed for any complex')
             with open(os.path.join(self.full_cache_path, "heterographs.pkl"), 'wb') as f:
                 pickle.dump((complex_graphs), f)
             with open(os.path.join(self.full_cache_path, "rdkit_ligands.pkl"), 'wb') as f:
@@ -297,6 +309,7 @@ class PDBBind(Dataset):
 
             ligs = read_mols(self.pdbbind_dir, name, remove_hs=False)
         complex_graphs = []
+        failed_indices = []
         for i, lig in enumerate(ligs):
             if self.max_lig_size is not None and lig.GetNumHeavyAtoms() > self.max_lig_size:
                 print(f'Ligand with {lig.GetNumHeavyAtoms()} heavy atoms is larger than max_lig_size {self.max_lig_size}. Not including {name} in preprocessed data.')
@@ -309,6 +322,7 @@ class PDBBind(Dataset):
                 rec, rec_coords, c_alpha_coords, n_coords, c_coords, lm_embeddings = extract_receptor_structure(copy.deepcopy(rec_model), lig, lm_embedding_chains=lm_embedding_chains)
                 if lm_embeddings is not None and len(c_alpha_coords) != len(lm_embeddings):
                     print(f'LM embeddings for complex {name} did not have the right length for the protein. Skipping {name}.')
+                    failed_indices.append(i)
                     continue
 
                 get_rec_graph(rec, rec_coords, c_alpha_coords, n_coords, c_coords, complex_graph, rec_radius=self.receptor_radius,
@@ -318,6 +332,7 @@ class PDBBind(Dataset):
             except Exception as e:
                 print(f'Skipping {name} because of the error:')
                 print(e)
+                failed_indices.append(i)
                 continue
 
             protein_center = torch.mean(complex_graph['receptor'].pos, dim=0, keepdim=True)
@@ -333,6 +348,8 @@ class PDBBind(Dataset):
 
             complex_graph.original_center = protein_center
             complex_graphs.append(complex_graph)
+        for idx_to_delete in sorted(failed_indices, reverse=True):
+            del ligs[idx_to_delete]
         return complex_graphs, ligs
 
 
@@ -388,6 +405,7 @@ def construct_loader(args, t_to_sigma):
 def read_mol(pdbbind_dir, name, remove_hs=False):
     lig = read_molecule(os.path.join(pdbbind_dir, name, f'{name}_ligand.sdf'), remove_hs=remove_hs, sanitize=True)
     if lig is None:  # read mol2 file if sdf file cannot be sanitized
+        print('Using the .sdf file failed. We found a .mol2 file instead and are trying to use that.')
         lig = read_molecule(os.path.join(pdbbind_dir, name, f'{name}_ligand.mol2'), remove_hs=remove_hs, sanitize=True)
     return lig
 
