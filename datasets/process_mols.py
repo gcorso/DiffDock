@@ -487,11 +487,15 @@ def write_mol_with_coords(mol, new_coords, path):
     w.close()
 
 def read_molecule(molecule_file, sanitize=False, calc_charges=False, remove_hs=False):
-    if molecule_file.endswith('.mol2'):
-        mol = Chem.MolFromMol2File(molecule_file, sanitize=False, removeHs=False)
-    elif molecule_file.endswith('.sdf'):
-        supplier = Chem.SDMolSupplier(molecule_file, sanitize=False, removeHs=False)
-        mol = supplier[0]
+    if molecule_file.endswith('.mol2') or molecule_file.endswith('.sdf'):
+        molecule_file = '.'.join( molecule_file.split( '.' )[ :-1 ] )
+        try:
+            mol = Chem.MolFromMol2File(molecule_file + '.mol2', sanitize=False, removeHs=False)
+        except:
+            pass
+        if mol == None:
+            supplier = Chem.SDMolSupplier(molecule_file + '.sdf', sanitize=False, removeHs=False)
+            mol = supplier[0]
     elif molecule_file.endswith('.pdbqt'):
         with open(molecule_file) as file:
             pdbqt_data = file.readlines()
@@ -502,8 +506,10 @@ def read_molecule(molecule_file, sanitize=False, calc_charges=False, remove_hs=F
     elif molecule_file.endswith('.pdb'):
         mol = Chem.MolFromPDBFile(molecule_file, sanitize=False, removeHs=False)
     else:
-        raise ValueError('Expect the format of the molecule_file to be '
-                         'one of .mol2, .sdf, .pdbqt and .pdb, got {}'.format(molecule_file))
+        mol = Chem.MolFromMolSmiles( molecule_file )
+        if mol == None:
+            return ValueError('Expect the format of the molecule_file to be '
+                          'one of .mol2, .sdf, .pdbqt and .pdb, got {}'.format(molecule_file))
 
     try:
         if sanitize or calc_charges:
@@ -520,7 +526,7 @@ def read_molecule(molecule_file, sanitize=False, calc_charges=False, remove_hs=F
             mol = Chem.RemoveHs(mol, sanitize=sanitize)
     except Exception as e:
         print(e)
-        print("RDKit was unable to read the molecule.")
+        print("could not process mol", molecule_file)
         return None
 
     return mol
