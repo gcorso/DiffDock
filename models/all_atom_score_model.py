@@ -242,7 +242,7 @@ class TensorProductScoreModel(torch.nn.Module):
         # compute translational and rotational score vectors
         center_edge_index, center_edge_attr, center_edge_sh = self.build_center_conv_graph(data)
         center_edge_attr = self.center_edge_embedding(center_edge_attr)
-        center_edge_attr = torch.cat([center_edge_attr, lig_node_attr[center_edge_index[0], :self.ns]], -1)
+        center_edge_attr = torch.cat([center_edge_attr, lig_node_attr[center_edge_index[1], :self.ns]], -1)
         global_pred = self.final_conv(lig_node_attr, center_edge_index, center_edge_attr, center_edge_sh, out_nodes=data.num_graphs)
 
         tr_pred = global_pred[:, :3] + global_pred[:, 6:9]

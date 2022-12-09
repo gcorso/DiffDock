@@ -149,7 +149,6 @@ def test_epoch(model, loader, rmsd_prediction):
     model.eval()
     meter = AverageMeter(['loss'], unpooled_metrics=True) if rmsd_prediction else AverageMeter(['confidence_loss', 'accuracy', 'ROC AUC'], unpooled_metrics=True)
     all_labels = []
-    all_affinities = []
     for data in tqdm(loader, total=len(loader)):
         try:
             with torch.no_grad():
@@ -250,8 +249,10 @@ def train(args, model, optimizer, scheduler, train_loader, val_loader, run_dir):
 def construct_loader_confidence(args, device):
     common_args = {'cache_path': args.cache_path, 'original_model_dir': args.original_model_dir, 'device': device,
                    'inference_steps': args.inference_steps, 'samples_per_complex': args.samples_per_complex,
-                   'limit_complexes': args.limit_complexes, 'all_atoms': args.all_atoms, 'balance': args.balance, 'rmsd_classification_cutoff': args.rmsd_classification_cutoff,
-                   'use_original_model_cache': args.use_original_model_cache, 'cache_creation_id': args.cache_creation_id, "cache_ids_to_combine": args.cache_ids_to_combine}
+                   'limit_complexes': args.limit_complexes, 'all_atoms': args.all_atoms, 'balance': args.balance,
+                   'rmsd_classification_cutoff': args.rmsd_classification_cutoff, 'use_original_model_cache': args.use_original_model_cache,
+                   'cache_creation_id': args.cache_creation_id, "cache_ids_to_combine": args.cache_ids_to_combine,
+                   "model_ckpt": args.ckpt}
     loader_class = DataListLoader if torch.cuda.is_available() else DataLoader
 
     exception_flag = False

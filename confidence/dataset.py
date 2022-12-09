@@ -57,8 +57,8 @@ def get_args_and_cache_path(original_model_dir, split):
 class ConfidenceDataset(Dataset):
     def __init__(self, cache_path, original_model_dir, split, device, limit_complexes,
                  inference_steps, samples_per_complex, all_atoms,
-                 args, balance=False, use_original_model_cache=True, rmsd_classification_cutoff=2,
-                 cache_ids_to_combine= None, cache_creation_id=None):
+                 args, model_ckpt, balance=False, use_original_model_cache=True, rmsd_classification_cutoff=2,
+                 cache_ids_to_combine=None, cache_creation_id=None):
 
         super(ConfidenceDataset, self).__init__()
 
@@ -73,9 +73,21 @@ class ConfidenceDataset(Dataset):
         self.cache_ids_to_combine = cache_ids_to_combine
         self.cache_creation_id = cache_creation_id
         self.samples_per_complex = samples_per_complex
+        self.model_ckpt = model_ckpt
 
         self.original_model_args, original_model_cache = get_args_and_cache_path(original_model_dir, split)
         self.complex_graphs_cache = original_model_cache if self.use_original_model_cache else get_cache_path(args, split)
+
+        # check if the docked positions have already been computed, if not run the preprocessing (docking every complex)
+        self.full_cache_path = os.path.join(cache_path, f'model_{os.path.splitext(os.path.basename(original_model_dir))[0]}'
+                                            f'_split_{split}_limit_{limit_complexes}')
+
+        if (not os.path.exists(os.path.join(self.full_cache_path, "ligand_positions.pkl")) and self.cache_creation_id is None) or \
+                (not os.path.exists(os.path.join(self.full_cache_path, f"ligand_positions_id{self.cache_creation_id}.pkl")) and self.cache_creation_id is not None):
+            os.makedirs(self.full_cache_path, exist_ok=True)
+            self.preprocessing(original_model_cache)
+
+        # load the graphs that the confidence model will use
         print('Using the cached complex graphs of the original model args' if self.use_original_model_cache else 'Not using the cached complex graphs of the original model args. Instead the complex graphs are used that are at the location given by the dataset parameters given to confidence_train.py')
         print(self.complex_graphs_cache)
         if not os.path.exists(os.path.join(self.complex_graphs_cache, "heterographs.pkl")):
@@ -98,14 +110,6 @@ class ConfidenceDataset(Dataset):
         with open(os.path.join(self.complex_graphs_cache, "heterographs.pkl"), 'rb') as f:
             complex_graphs = pickle.load(f)
         self.complex_graph_dict = {d.name: d for d in complex_graphs}
-
-        self.full_cache_path = os.path.join(cache_path, f'model_{os.path.splitext(os.path.basename(original_model_dir))[0]}'
-                                            f'_split_{split}_limit_{limit_complexes}')
-
-        if (not os.path.exists(os.path.join(self.full_cache_path, "ligand_positions.pkl")) and self.cache_creation_id is None) or \
-                (not os.path.exists(os.path.join(self.full_cache_path, f"ligand_positions_id{self.cache_creation_id}.pkl")) and self.cache_creation_id is not None):
-            os.makedirs(self.full_cache_path, exist_ok=True)
-            self.preprocessing(original_model_cache)
 
         if self.cache_ids_to_combine is None:
             print(f'HAPPENING | Loading positions and rmsds from: {os.path.join(self.full_cache_path, "ligand_positions.pkl")}')
@@ -209,7 +213,7 @@ class ConfidenceDataset(Dataset):
         t_to_sigma = partial(t_to_sigma_compl, args=self.original_model_args)
 
         model = get_model(self.original_model_args, self.device, t_to_sigma=t_to_sigma, no_parallel=True)
-        state_dict = torch.load(f'{self.original_model_dir}/best_model.pt', map_location=torch.device('cpu'))
+        state_dict = torch.load(f'{self.original_model_dir}/{self.model_ckpt}.pt', map_location=torch.device('cpu'))
         model.load_state_dict(state_dict, strict=True)
         model = model.to(self.device)
         model.eval()

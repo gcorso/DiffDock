@@ -33,27 +33,13 @@ current repo
 
     git clone https://github.com/gcorso/DiffDock.git
 
-Create a new environment with all required packages using `environment.yml`. While in the project directory run:
+This is an example for how to set up a working conda environment to run the code (but make sure to use the correct pytorch, pytorch-geometric, cuda versions or cpu only versions):
 
-    conda env create
-
-Activate the environment
-
+    conda create --name diffdock python=3.8
     conda activate diffdock
-
-If you want to install the packages yourself in case something does not work, these are the required ones:
-    
-    pytorch
-    pyg
-    pyyaml
-    scipy
-    networkx
-    biopython
-    rdkit-pypi
-    e3nn
-    spyrmsd
-    pandas
-    biopandas
+    conda install pytorch pytorch-cuda=11.7 -c pytorch -c nvidia
+    pip install torch-scatter torch-sparse torch-cluster torch-spline-conv torch-geometric -f https://data.pyg.org/whl/torch-1.13.0+cu117.html
+    python -m pip install PyYAML scipy "networkx[default]" biopython rdkit-pypi e3nn spyrmsd pandas biopandas
 
 # Running DiffDock on your own complexes
 We support multiple input formats depending on whether you only want to make predictions for a single complex or for many at once.\
@@ -85,7 +71,7 @@ And done, that is it!
 
 
 
-# Running DiffDock to reproduce paper numbers
+# Retraining DiffDock
 Download the data and place it as described in the "Dataset" section above.
 
 ### Generate the ESM2 embeddings for the proteins
@@ -156,5 +142,10 @@ Now everything is trained and you can run inference with:
 
 ## License
 MIT
+
+## Acknowledgements
+
+We thank Wei Lu and Rachel Wu for pointing out some issues with the code.
+
 
 ![Alt Text](visualizations/example_6agt_symmetric.gif)
