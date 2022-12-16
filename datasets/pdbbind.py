@@ -220,7 +220,8 @@ class PDBBind(Dataset):
         for index in sorted(failed_ligand_indices, reverse=True):
             del self.protein_path_list[index]
             del self.ligand_descriptions[index]
-
+        print('lig_len', len(ligands_list))
+        print(ligands_list)
         if self.esm_embeddings_path is not None:
             print('Reading language model embeddings.')
             lm_embeddings_chains_all = []
@@ -233,7 +234,7 @@ class PDBBind(Dataset):
                 lm_embeddings_chains_all.append(lm_embeddings_chains)
         else:
             lm_embeddings_chains_all = [None] * len(self.protein_path_list)
-
+        print(lm_embeddings_chains)
         print('Generating graphs for ligands and proteins')
         if self.num_workers > 1:
             # running preprocessing in parallel on multiple workers and saving the progress every 1000 complexes
