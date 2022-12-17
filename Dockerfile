@@ -44,7 +44,7 @@ RUN wget --quiet https://repo.anaconda.com/archive/Anaconda3-2020.02-Linux-x86_6
 ENV PATH /opt/conda/bin:$PATH
 
 # setup conda virtual environment
-COPY ./DiffDock/environment.yml ./environment.yml
+COPY ./environment.yml ./environment.yml
 
 RUN conda update conda \
 	&& conda env create --name DiffDock -f ./environment.yml
@@ -55,7 +55,7 @@ ENV CONDA_DEFAULT_ENV $DiffDock
 
 #install torch specific packages
 RUN pip install --upgrade pip 
-COPY ./DiffDock/requirements_docker_GPU.txt ./
+COPY ./requirements_docker_GPU.txt ./
 RUN pip install --no-cache-dir torch==1.12.1 torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu116
 RUN pip install --no-cache-dir -r ./requirements_docker_GPU.txt
 RUN pip install torch-scatter torch-sparse -f https://data.pyg.org/whl/torch-1.12.1+cu116.html
