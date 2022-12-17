@@ -2,12 +2,9 @@ FROM nvidia/cuda:11.6.0-cudnn8-devel-ubuntu20.04
 
 
 RUN chsh -s /bin/bash
-
-SHELL ["/bin/bash", "-c"]
-
 WORKDIR /root/
 
-# setting up pod integration
+# basic pod dependencies
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 ENV DEBIAN_FRONTEND noninteractive\
     SHELL=/bin/bash
@@ -26,10 +23,6 @@ RUN apt-get update --yes && \
     apt-get clean && rm -rf /var/lib/apt/lists/* && \
     echo "en_US.UTF-8 UTF-8" > /etc/locale.gen
 RUN apt-get clean
-RUN pip install jupyterlab
-RUN pip install ipywidgets
-RUN pip install jupyter-archive
-RUN jupyter nbextension enable --py widgetsnbextension
 
 # installing model dependencies
 RUN wget --quiet https://repo.anaconda.com/archive/Anaconda3-2020.02-Linux-x86_64.sh -O ~/anaconda.sh && \
@@ -43,7 +36,7 @@ RUN wget --quiet https://repo.anaconda.com/archive/Anaconda3-2020.02-Linux-x86_6
 
 ENV PATH /opt/conda/bin:$PATH
 
-# setup conda virtual environment
+## setup conda virtual environment
 COPY ./environment.yml ./environment.yml
 
 RUN conda update conda \
@@ -53,7 +46,7 @@ RUN echo "conda activate DiffDock" >> ~/.bashrc
 ENV PATH /opt/conda/envs/DiffDock/bin:$PATH
 ENV CONDA_DEFAULT_ENV $DiffDock
 
-#install torch specific packages
+## install torch specific packages
 RUN pip install --upgrade pip 
 COPY ./requirements_docker_GPU.txt ./
 RUN pip install --no-cache-dir torch==1.12.1 torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu116
@@ -62,6 +55,12 @@ RUN pip install torch-scatter torch-sparse -f https://data.pyg.org/whl/torch-1.1
 RUN pip install torch-geometric torch-cluster -f https://data.pyg.org/whl/torch-1.12.1+cu116.html
 COPY . .
 RUN pip install -e ./esm/.
+
+# install jupyter lab extensions
+RUN pip install jupyterlab
+RUN pip install ipywidgets
+RUN pip install jupyter-archive
+RUN jupyter nbextension enable --py widgetsnbextension
 
 ADD start.sh /
 RUN chmod +x /start.sh
