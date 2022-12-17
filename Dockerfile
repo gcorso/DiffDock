@@ -60,7 +60,7 @@ RUN pip install --no-cache-dir torch==1.12.1 torchvision torchaudio --extra-inde
 RUN pip install --no-cache-dir -r ./requirements_docker_GPU.txt
 RUN pip install torch-scatter torch-sparse -f https://data.pyg.org/whl/torch-1.12.1+cu116.html
 RUN pip install torch-geometric torch-cluster -f https://data.pyg.org/whl/torch-1.12.1+cu116.html
-COPY ./DiffDock ./
+COPY . .
 RUN pip install -e ./esm/.
 
 ADD start.sh /
