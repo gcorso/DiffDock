@@ -51,9 +51,9 @@ RUN mkdir /content && \
 
 ### Install DiffDock-Specific Torch Dependencies
 RUN pip uninstall torch-scatter torch-sparse torch-geometric torch-cluster --y && \
-    pip install torch-scatter -f https://data.pyg.org/whl/torch-{torch.__version__}.html --quiet && \
-    pip install torch-sparse -f https://data.pyg.org/whl/torch-{torch.__version__}.html --quiet && \
-    pip install torch-cluster -f https://data.pyg.org/whl/torch-{torch.__version__}.html --quiet && \
+    pip install torch-scatter -f https://data.pyg.org/whl/torch-1.12.0%2Bcu113.html --quiet && \
+    pip install torch-sparse -f https://data.pyg.org/whl/torch-1.12.0%2Bcu113.html --quiet && \
+    pip install torch-cluster -f https://data.pyg.org/whl/torch-1.12.0%2Bcu113.html --quiet && \
     pip install git+https://github.com/pyg-team/pytorch_geometric.git --quiet
 
 ### Install Facebook ESM
@@ -63,3 +63,6 @@ RUN cd /content/DiffDock && \
     git checkout f07aed6 && \
     sudo pip install -e .  && \
     cd /content/DiffDock
+
+
+WORKDIR /content/DiffDock
