@@ -22,11 +22,11 @@ RUN apt-get clean && \
     #nvidia-cuda-toolkit
 
 ## Install PyTorch with dependencies
-RUN conda install --quiet --yes \
-    pytorch torchvision cudatoolkit=10.1 rdkit \
-    pyyaml mkl mkl-include setuptools cmake cffi typing pot && \
-    conda clean --all -f -y && \
-    fix-permissions $CONDA_DIR 
+# RUN conda install --quiet --yes \
+#     pytorch torchvision cudatoolkit=10.1 rdkit \
+#     pyyaml mkl mkl-include setuptools cmake cffi typing pot && \
+#     conda clean --all -f -y && \
+#     fix-permissions $CONDA_DIR 
 
 ## Install DiffDock Dependencies
 RUN pip install ipython-autotime && \
@@ -40,7 +40,8 @@ RUN pip install ipython-autotime && \
     pip install spyrmsd==0.5.2 --quiet && \
     pip install pandas==1.3.5 --quiet && \
     pip install biopandas==0.4.1 --quiet && \
-    pip install torch==1.12.1+cu113 --quiet
+    # pip install torch==1.12.1+cu113 --quiet
+    pip install torch==1.12.1 --quiet
 
 ### Git DiffDock
 RUN mkdir /content && \
@@ -51,9 +52,12 @@ RUN mkdir /content && \
 
 ### Install DiffDock-Specific Torch Dependencies
 RUN pip uninstall torch-scatter torch-sparse torch-geometric torch-cluster --y && \
-    pip install torch-scatter -f https://data.pyg.org/whl/torch-1.12.0%2Bcu113.html --quiet && \
-    pip install torch-sparse -f https://data.pyg.org/whl/torch-1.12.0%2Bcu113.html --quiet && \
-    pip install torch-cluster -f https://data.pyg.org/whl/torch-1.12.0%2Bcu113.html --quiet && \
+    # pip install torch-scatter -f https://data.pyg.org/whl/torch-1.12.0%2Bcu113.html --quiet && \
+    # pip install torch-sparse -f https://data.pyg.org/whl/torch-1.12.0%2Bcu113.html --quiet && \
+    # pip install torch-cluster -f https://data.pyg.org/whl/torch-1.12.0%2Bcu113.html --quiet && \
+    pip install torch-scatter -f https://data.pyg.org/whl/torch-1.12.1.html --quiet && \
+    pip install torch-sparse -f https://data.pyg.org/whl/torch-1.12.1.html --quiet && \
+    pip install torch-cluster -f https://data.pyg.org/whl/torch-1.12.1.html --quiet && \
     pip install git+https://github.com/pyg-team/pytorch_geometric.git --quiet
 
 ### Install Facebook ESM
