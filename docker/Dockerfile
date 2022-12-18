@@ -6,8 +6,8 @@ LABEL author="Tuple, LLC <contact@tuple.xyz>"
 ## Environment Settings
 ENV DEBIAN_FRONTEND=noninteractive \
     JUPYTER_ENABLE_LAB=yes \
-    JUPYTER_TOKEN=equidock \
-    NB_USER=equidock \
+    JUPYTER_TOKEN=diffdock \
+    NB_USER=diffdock \
     CHOWN_HOME=yes \
     GRANT_SUDO=yes \
     RESTARTABLE=yes \
@@ -65,7 +65,7 @@ RUN cd /content/DiffDock && \
     git clone https://github.com/facebookresearch/esm && \
     cd /content/DiffDock/esm && \
     git checkout f07aed6 && \
-    sudo pip install -e .  && \
+    pip install -e .  && \
     cd /content/DiffDock
 
 
