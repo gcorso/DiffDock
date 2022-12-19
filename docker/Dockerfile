@@ -69,4 +69,7 @@ RUN cd /content/DiffDock && \
     cd /content/DiffDock
 
 
+
+RUN chmod -R 777 /content
+
 WORKDIR /content/DiffDock
