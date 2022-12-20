@@ -3,15 +3,18 @@
 
 ## Running Docker
 
-### Build
+### Build and Run (w/ CPU)
 ```sh
 docker build -t diffdock .
+
+# with CPU (and mounting a volume)
+docker run -v C:\data:/data --name diffdock --rm -p 8888:8888 diffdock
 ```
 
-### Run
+### Build and Run (w/ GPU)
 ```sh
+docker build -t diffdock .
+
 # with GPUs
 docker run --gpus all --name diffdock --rm -p 8888:8888 diffdock
-# with CPU (and mounting a volume)
-docker run -v T:\diffdock_tests:/data --name diffdock --rm -p 8888:8888 diffdock
 ```
