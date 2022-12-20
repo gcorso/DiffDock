@@ -40,8 +40,9 @@ RUN pip install ipython-autotime && \
     pip install spyrmsd==0.5.2 --quiet && \
     pip install pandas==1.3.5 --quiet && \
     pip install biopandas==0.4.1 --quiet && \
+    conda install torch==1.12.1+cu113 -c pytorch
     # pip install torch==1.12.1+cu113 --quiet
-    pip install torch==1.12.1 --quiet
+    # pip install torch==1.12.1 --quiet
 
 ### Git DiffDock
 RUN mkdir /content && \
@@ -52,12 +53,12 @@ RUN mkdir /content && \
 
 ### Install DiffDock-Specific Torch Dependencies
 RUN pip uninstall torch-scatter torch-sparse torch-geometric torch-cluster --y && \
-    # pip install torch-scatter -f https://data.pyg.org/whl/torch-1.12.0%2Bcu113.html --quiet && \
-    # pip install torch-sparse -f https://data.pyg.org/whl/torch-1.12.0%2Bcu113.html --quiet && \
-    # pip install torch-cluster -f https://data.pyg.org/whl/torch-1.12.0%2Bcu113.html --quiet && \
-    pip install torch-scatter -f https://data.pyg.org/whl/torch-1.12.1.html --quiet && \
-    pip install torch-sparse -f https://data.pyg.org/whl/torch-1.12.1.html --quiet && \
-    pip install torch-cluster -f https://data.pyg.org/whl/torch-1.12.1.html --quiet && \
+    pip install torch-scatter -f https://data.pyg.org/whl/torch-1.12.0%2Bcu113.html --quiet && \
+    pip install torch-sparse -f https://data.pyg.org/whl/torch-1.12.0%2Bcu113.html --quiet && \
+    pip install torch-cluster -f https://data.pyg.org/whl/torch-1.12.0%2Bcu113.html --quiet && \
+    # pip install torch-scatter -f https://data.pyg.org/whl/torch-1.12.1.html --quiet && \
+    # pip install torch-sparse -f https://data.pyg.org/whl/torch-1.12.1.html --quiet && \
+    # pip install torch-cluster -f https://data.pyg.org/whl/torch-1.12.1.html --quiet && \
     pip install git+https://github.com/pyg-team/pytorch_geometric.git --quiet
 
 ### Install Facebook ESM
