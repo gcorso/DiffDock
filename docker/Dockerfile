@@ -13,13 +13,19 @@ ENV DEBIAN_FRONTEND=noninteractive \
     RESTARTABLE=yes \
     SETUPTOOLS_USE_DISTUTILS=stdlib
 
+
+ENV NVIDIA_VISIBLE_DEVICES all
+ENV NVIDIA_DRIVER_CAPABILITIES compute,utility
+
 USER root
+
+
 
 ## Install Basic Dependencies
 RUN apt-get clean && \
     apt-get update && \
-    apt-get -y install git curl wget python3.9 
-    #nvidia-cuda-toolkit
+    apt-get -y install git curl wget python3.9
+    # nvidia-cuda-toolkit
 
 ## Install PyTorch with dependencies
 # RUN conda install --quiet --yes \
@@ -27,6 +33,12 @@ RUN apt-get clean && \
 #     pyyaml mkl mkl-include setuptools cmake cffi typing pot && \
 #     conda clean --all -f -y && \
 #     fix-permissions $CONDA_DIR 
+
+## Install CUDA Toolkit (to fix libcusparse.so.11 issue - /opt/conda/lib/libcusparse.so.11)
+RUN conda install --yes cudatoolkit=11.3 -c pytorch && \
+    conda clean --all -f -y && \
+    export LD_LIBRARY_PATH="/opt/conda/lib/:$LD_LIBRARY_PATH" && \
+    export PATH="/opt/conda/lib/:$PATH"
 
 ## Install DiffDock Dependencies
 RUN pip install ipython-autotime && \
@@ -40,7 +52,7 @@ RUN pip install ipython-autotime && \
     pip install spyrmsd==0.5.2 --quiet && \
     pip install pandas==1.3.5 --quiet && \
     pip install biopandas==0.4.1 --quiet && \
-    conda install torch==1.12.1+cu113 -c pytorch
+    pip install torch==1.12.1+cu113 --extra-index-url https://download.pytorch.org/whl/cu113
     # pip install torch==1.12.1+cu113 --quiet
     # pip install torch==1.12.1 --quiet
 
@@ -69,7 +81,7 @@ RUN cd /content/DiffDock && \
     pip install -e .  && \
     cd /content/DiffDock
 
-
+COPY ./DiffDock_sample_notebook.ipynb /content/DiffDock
 
 RUN chmod -R 777 /content
 
