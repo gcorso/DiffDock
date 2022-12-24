@@ -38,6 +38,7 @@ RUN pip install ipython-autotime && \
     pip install spyrmsd==0.5.2 --quiet && \
     pip install pandas==1.3.5 --quiet && \
     pip install biopandas==0.4.1 --quiet && \
+    pip install py3Dmol==1.8.1 --quiet && \
     pip install torch==1.12.1+cu113 --extra-index-url https://download.pytorch.org/whl/cu113
     # pip install torch==1.12.1 --quiet
 
@@ -66,12 +67,13 @@ RUN cd /content/DiffDock && \
     pip install -e .  && \
     cd /content/DiffDock
 
-### Download ESM Model
-# RUN wget https://dl.fbaipublicfiles.com/fair-esm/models/esm2_t33_650M_UR50D.pt -P /home/diffdock/.cache/torch/hub/checkpoints/esm2_t33_650M_UR50D.pt
-
+### Download Smina
+RUN cd /content/DiffDock && \
+    wget https://sourceforge.net/projects/smina/files/smina.static/download -O smina && \
+    chmod +x smina
 
 ## Copy Sample Notebook
-COPY ./DiffDock_sample_notebook.ipynb /content/DiffDock
+COPY ./DiffDock_sample_notebook.ipynb /content/DiffDockc
 
 ## Update /content permissions
 RUN chmod -R 777 /content
