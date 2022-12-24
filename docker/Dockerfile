@@ -1,5 +1,4 @@
 FROM jupyter/scipy-notebook:latest
-# FROM cschranz/gpu-jupyter
 
 LABEL author="Tuple, LLC <contact@tuple.xyz>"
 
@@ -13,26 +12,13 @@ ENV DEBIAN_FRONTEND=noninteractive \
     RESTARTABLE=yes \
     SETUPTOOLS_USE_DISTUTILS=stdlib
 
-
-ENV NVIDIA_VISIBLE_DEVICES all
-ENV NVIDIA_DRIVER_CAPABILITIES compute,utility
-
 USER root
-
 
 
 ## Install Basic Dependencies
 RUN apt-get clean && \
     apt-get update && \
     apt-get -y install git curl wget python3.9
-    # nvidia-cuda-toolkit
-
-## Install PyTorch with dependencies
-# RUN conda install --quiet --yes \
-#     pytorch torchvision cudatoolkit=10.1 rdkit \
-#     pyyaml mkl mkl-include setuptools cmake cffi typing pot && \
-#     conda clean --all -f -y && \
-#     fix-permissions $CONDA_DIR 
 
 ## Install CUDA Toolkit (to fix libcusparse.so.11 issue - /opt/conda/lib/libcusparse.so.11)
 RUN conda install --yes cudatoolkit=11.3 -c pytorch && \
@@ -53,7 +39,6 @@ RUN pip install ipython-autotime && \
     pip install pandas==1.3.5 --quiet && \
     pip install biopandas==0.4.1 --quiet && \
     pip install torch==1.12.1+cu113 --extra-index-url https://download.pytorch.org/whl/cu113
-    # pip install torch==1.12.1+cu113 --quiet
     # pip install torch==1.12.1 --quiet
 
 ### Git DiffDock
@@ -81,8 +66,15 @@ RUN cd /content/DiffDock && \
     pip install -e .  && \
     cd /content/DiffDock
 
+### Download ESM Model
+# RUN wget https://dl.fbaipublicfiles.com/fair-esm/models/esm2_t33_650M_UR50D.pt -P /home/diffdock/.cache/torch/hub/checkpoints/esm2_t33_650M_UR50D.pt
+
+
+## Copy Sample Notebook
 COPY ./DiffDock_sample_notebook.ipynb /content/DiffDock
 
+## Update /content permissions
 RUN chmod -R 777 /content
 
+## Set Working Directory
 WORKDIR /content/DiffDock
