@@ -1,5 +1,10 @@
-# DiffDock: Diffusion Steps, Twists, and Turns for Molecular Docking
+# [DiffDock: Diffusion Steps, Twists, and Turns for Molecular Docking](https://arxiv.org/abs/2210.01776)
 [![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/diffdock-diffusion-steps-twists-and-turns-for/blind-docking-on-pdbbind)](https://paperswithcode.com/sota/blind-docking-on-pdbbind?p=diffdock-diffusion-steps-twists-and-turns-for)
+
+´´´
+Corso, G., Stärk, H., Jing, B., Barzilay, R., & Jaakkola, T. (2022). DiffDock: Diffusion Steps, Twists, and Turns for Molecular Docking. http://arxiv.org/abs/2210.01776
+```
+  
 
 ### [Paper on arXiv](https://arxiv.org/abs/2210.01776)
 
