@@ -61,7 +61,7 @@ Generate the embeddings with ESM2 (assuming that you are in the DiffDock directo
     cd esm
     pip install -e .
     cd ..
-    HOME=esm/model_weights python esm/scripts/extract.py esm2_t33_650M_UR50D data/prepared_for_esm.fasta data/esm2_output --repr_layers 33 --include per_tok
+    HOME=esm/model_weights python esm/scripts/extract.py esm2_t33_650M_UR50D data/prepared_for_esm.fasta data/esm2_output --repr_layers 33 --include per_tok --truncation_seq_length 4096
     
 And done, that is it!
 
