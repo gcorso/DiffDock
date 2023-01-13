@@ -1,11 +1,35 @@
 # [DiffDock: Diffusion Steps, Twists, and Turns for Molecular Docking](https://arxiv.org/abs/2210.01776)
 [![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/diffdock-diffusion-steps-twists-and-turns-for/blind-docking-on-pdbbind)](https://paperswithcode.com/sota/blind-docking-on-pdbbind?p=diffdock-diffusion-steps-twists-and-turns-for)
 
+## Citation
 ```
 Corso, G., Stärk, H., Jing, B., Barzilay, R., & Jaakkola, T. (2022). DiffDock: Diffusion Steps, Twists, and Turns for Molecular Docking. http://arxiv.org/abs/2210.01776
 ```
-  
 
+## Local Container Execution
+```
+# pulling the container
+docker pull ghcr.io/labdao/diffdock:main
+
+# cloning the repository, including the test data
+cd /home/ubuntu
+git clone https://github.com/labdao/diffdock.git
+
+# running the container on ubuntu linux
+docker run -v /home/ubuntu/diffdock/test:/inputs -v /home/ubuntu:/outputs ghcr.io/labdao/diffdock:main python main.py --protein /inputs/test.pdb --small_molecule_library /inputs/test.sdf
+```
+
+## Public Container Execution
+```
+# install bacalhau
+curl -sL https://get.bacalhau.org/install.sh | bash
+
+# please note that bacalhau currently only supports one mounted IPFS file
+# in this case we provide a protein structure, called test.pdb, via IPFS
+bacalhau docker run -i bafybeico6n7wgydwaigcnvkrojldc2hk5dbxqp66ezjw5ytis2irq7k2pm ghcr.io/labdao/diffdock:main -- python main.py --protein /inputs/test.pdb --small_molecule_library /src/test/test.sdf
+```
+
+## Original README
 ### [Paper on arXiv](https://arxiv.org/abs/2210.01776)
 
 Implementation of DiffDock, state-of-the-art method for molecular docking, by Gabriele Corso*, Hannes Stark*, Bowen Jing*, Regina Barzilay and Tommi Jaakkola.
