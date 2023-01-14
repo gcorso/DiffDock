@@ -1,0 +1,265 @@
+
+  Mrv15a5 07082217552D          
+
+ 19 20  0  0  0  0            999 V2000
+    1.4289    0.0000    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0
+    2.1434   -0.4125    0.0000 O   0  0  0  0  0  0  0  0  0  0  0  0
+    2.1434   -1.2375    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0
+    2.8579   -1.6500    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0
+    2.8579   -2.4750    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0
+    2.1434   -2.8875    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0
+    2.1434   -3.7125    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0
+    1.4289   -4.1250    0.0000 N   0  0  0  0  0  0  0  0  0  0  0  0
+    1.4289   -4.9500    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0
+    0.7145   -5.3625    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0
+    0.0000   -4.9500    0.0000 N   0  0  0  0  0  0  0  0  0  0  0  0
+    0.0000   -4.1250    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0
+    0.7145   -3.7125    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0
+    1.4289   -2.4750    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0
+    0.7145   -2.8875    0.0000 O   0  0  0  0  0  0  0  0  0  0  0  0
+    0.0000   -2.4750    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0
+    1.4289   -1.6500    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0
+    0.7145   -1.2375    0.0000 O   0  0  0  0  0  0  0  0  0  0  0  0
+    0.7145   -0.4125    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0
+  1  2  1  0  0  0  0
+  2  3  1  0  0  0  0
+  3  4  1  0  0  0  0
+  4  5  2  0  0  0  0
+  5  6  1  0  0  0  0
+  6  7  1  0  0  0  0
+  7  8  1  0  0  0  0
+  8  9  1  0  0  0  0
+  9 10  1  0  0  0  0
+ 10 11  1  0  0  0  0
+ 11 12  1  0  0  0  0
+ 12 13  1  0  0  0  0
+  8 13  1  0  0  0  0
+  6 14  2  0  0  0  0
+ 14 15  1  0  0  0  0
+ 15 16  1  0  0  0  0
+ 14 17  1  0  0  0  0
+  3 17  2  0  0  0  0
+ 17 18  1  0  0  0  0
+ 18 19  1  0  0  0  0
+M  END
+>  <Catalog ID>
+Z99601262
+
+>  <MW>
+266.16
+
+>  <MW (desalted)>
+266.34
+
+>  <ClogP>
+1.18
+
+>  <Name>
+Trimetazidine
+
+>  <DrugBank ID>
+DB09069
+
+>  <MOA>
+Trimetazidine is a selective long chain 3-ketoyl CoA thiolase inhibitor. Trimetazidine is an effective antianginal agent and a cytoprotective drug, has anti-oxidant, anti-inflammatory, antinociceptive and gastroprotective properties. It is a piperazine derivative indicated as an adjunct therapy in symptomatic treatment of stable angina pectoris.
+
+>  <Target short>
+ACAA2
+
+>  <Targets>
+3-ketoacyl-CoA thiolase, mitochondrial
+
+>  <Disease Area>
+agents affecting metabolism | anti-ischemic agent | anti-metabolic disorder agent | anti-myocardial infarction agent | anticachectic agent | anticonvulsive agent | antifibrotic agent | apoptosis inducing factor | cardioprotective agent | cytoprotective agent | cytotoxic agent | mitochondrial protective agent | myoprotective agent | toxic substance
+
+>  <Smiles>
+COC1=C(OC)C(OC)=C(CN2CCNCC2)C=C1
+
+>  <CAS>
+5011-34-7
+
+>  <Description>
+Trimetazidine is a selective long chain 3-ketoyl CoA thiolase inhibitor. Trimetazidine is an effective antianginal agent and a cytoprotective drug, has anti-oxidant, anti-inflammatory, antinociceptive and gastroprotective properties. It is a piperazine derivative indicated as an adjunct therapy in symptomatic treatment of stable angina pectoris.
+
+>  <Activity coefficients and values>
+IC50 - 75 nM
+
+>  <References>
+Curr. Pharm. Des., 2002, vol. 8, # 14, p. 1199 - 1227
+
+>  <Phase>
+approved; investigational
+
+>  <Indication>
+angina pectoris
+
+$$$$
+
+  Mrv15a5 07082217552D          
+
+ 11 11  0  0  0  0            999 V2000
+    2.0572    1.7262    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0
+    1.2448    1.8695    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0
+    0.7145    1.2375    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0
+    0.1842    1.8695    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0
+    1.4289    0.8250    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0
+    1.4289    0.0000    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0
+    2.1434   -0.4125    0.0000 O   0  0  0  0  0  0  0  0  0  0  0  0
+    0.7145   -0.4125    0.0000 N   0  0  0  0  0  0  0  0  0  0  0  0
+    0.0000    0.0000    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0
+   -0.7145   -0.4125    0.0000 O   0  0  0  0  0  0  0  0  0  0  0  0
+    0.0000    0.8250    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0
+  1  2  1  0  0  0  0
+  2  3  1  0  0  0  0
+  3  4  1  0  0  0  0
+  3  5  1  0  0  0  0
+  5  6  1  0  0  0  0
+  6  7  2  0  0  0  0
+  6  8  1  0  0  0  0
+  8  9  1  0  0  0  0
+  9 10  2  0  0  0  0
+  9 11  1  0  0  0  0
+  3 11  1  0  0  0  0
+M  END
+>  <Catalog ID>
+Z99599698
+
+>  <MW>
+155.09
+
+>  <MW (desalted)>
+155.19
+
+>  <ClogP>
+0.95
+
+>  <Name>
+Bemegride
+
+>  <MOA>
+Bemegride is a central nervous system stimulant and antidote for barbiturate poisoning. Bemegride has an antagonistic action on the GABA A receptor, suppressing both GABA- and pentobarbitone-evoked whole-cell currents to similar extents.
+
+>  <Target short>
+GABA A receptor
+
+>  <Disease Area>
+CNS stimulants; Antidots
+
+>  <Smiles>
+CCC1(C)CC(=O)NC(=O)C1
+
+>  <CAS>
+64-65-3
+
+>  <Description>
+Bemegride is a CNS stimulant that is used to induce convulsions in experimental animals. It has also been used as a respiratory stimulant and in the treatment of barbiturate overdose.
+
+>  <Activity coefficients and values>
+pKi - 5 - | pKi - 5 - | pKi - 5 -
+
+>  <References>
+EUR. J. PHARMACOL., 1995, vol. 286, # 2, p. 137 - 146 | EUR. J. PHARMACOL., 1995, vol. 286, # 2, p. 137 - 146 | EUR. J. PHARMACOL., 1995, vol. 286, # 2, p. 137 - 146
+
+>  <Phase>
+Experimental
+
+>  <Indication>
+poison antidote
+
+$$$$
+
+  Mrv15a5 07082217552D          
+
+ 19 20  0  0  0  0            999 V2000
+    0.0000   -4.9500    0.0000 O   0  0  0  0  0  0  0  0  0  0  0  0
+    0.7145   -5.3625    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0
+    0.7145   -6.1875    0.0000 O   0  0  0  0  0  0  0  0  0  0  0  0
+    1.4289   -4.9500    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0
+    2.1434   -5.3625    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0
+    2.8579   -4.9500    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0
+    2.8579   -4.1250    0.0000 O   0  0  0  0  0  0  0  0  0  0  0  0
+    3.5724   -5.3625    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0
+    4.2868   -4.9500    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0
+    5.0013   -5.3625    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0
+    5.0013   -6.1875    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0
+    4.2868   -6.6000    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0
+    3.5724   -6.1875    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0
+    5.7158   -6.6000    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0
+    6.4302   -6.1875    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0
+    7.1447   -6.6000    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0
+    7.1447   -7.4250    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0
+    6.4302   -7.8375    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0
+    5.7158   -7.4250    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0
+  1  2  1  0  0  0  0
+  2  3  2  0  0  0  0
+  2  4  1  0  0  0  0
+  4  5  1  0  0  0  0
+  5  6  1  0  0  0  0
+  6  7  2  0  0  0  0
+  6  8  1  0  0  0  0
+  8  9  1  0  0  0  0
+  9 10  2  0  0  0  0
+ 10 11  1  0  0  0  0
+ 11 12  2  0  0  0  0
+ 12 13  1  0  0  0  0
+  8 13  2  0  0  0  0
+ 11 14  1  0  0  0  0
+ 14 15  1  0  0  0  0
+ 15 16  2  0  0  0  0
+ 16 17  1  0  0  0  0
+ 17 18  2  0  0  0  0
+ 18 19  1  0  0  0  0
+ 14 19  2  0  0  0  0
+M  END
+>  <Catalog ID>
+Z99599540
+
+>  <MW>
+254.09
+
+>  <MW (desalted)>
+254.28
+
+>  <ClogP>
+3.14
+
+>  <Name>
+Fenbufen
+
+>  <DrugBank ID>
+DB08981
+
+>  <MOA>
+Fenbufen is a non-steroidal anti-inflammatory drug and a prodrug form of 4-biphenylacetic acid. Fenbufen was previously used in the treatment of osteoarthritis and inflammatory pain.
+
+>  <Target short>
+PTGS1, PTGS2
+
+>  <Targets>
+Acetylcholinesterase (peptide) | 72 kda type iv collagenase | 72kDa type IV collagenase | Aldo-keto reductase family 1 member C3 | Prostaglandin G/H synthase 1 | Prostaglandin G/H synthase 2
+
+>  <Disease Area>
+antibiotic agent | antiinflammatory agent | antioxidant | antitoxoplasmic agent | cytotoxic agent | inhibitory activity | nonsteroid antiinflammatory agent
+
+>  <Smiles>
+OC(=O)CCC(=O)C1=CC=C(C=C1)C1=CC=CC=C1
+
+>  <CAS>
+36330-85-5
+
+>  <Description>
+Fenbufen is a non-steroidal anti-inflammatory drug and a prodrug form of 4-biphenylacetic acid. Fenbufen was previously used in the treatment of osteoarthritis and inflammatory pain.
+
+>  <Activity coefficients and values>
+IC50 - 0.97 µM | IC50 - 1000 nM | IC50 - 1000 nM | IC50 - 0.001 mM | IC50 - 3.9 µM | IC50 - 8.1 µM
+
+>  <References>
+Chem. Biodivers., 2021, vol. 18, # 2 | Bayer Corporation - US5789434, 1998, A | Harold Clinton Eugene Kluender; Kerry Jeanne Combs; Brian Richard Dixon; Stephan Schneider; Jill Elizabeth Wood; Michael Christopher VanZandt; Donald John Wolanin; Scott M. Wilhelm; Guenter Hans Heinz Herbert Benz; David Ross Brittelli; William Harrison Bullock - US6166082, 2000, A | ARCH. BIOCHEM. BIOPHYS., 1992, vol. 296, # 1, p. 17 - 26 | Eur. J. Med. Chem., 2009, vol. 44, # 9, p. 3798 - 3804 | Eur. J. Med. Chem., 2009, vol. 44, # 9, p. 3798 - 3804
+
+>  <Phase>
+approved
+
+>  <Indication>
+pain relief
+
+$$$$
