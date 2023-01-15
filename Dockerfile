@@ -67,5 +67,6 @@ RUN jupyter nbextension enable --py widgetsnbextension
 ADD start.sh /
 RUN chmod +x /start.sh
 #TODO #68 create proper test
+ADD test.sh /
 RUN chmod +x /test.sh
 CMD [ "./start.sh" ]
