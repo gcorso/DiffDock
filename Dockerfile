@@ -1,15 +1,15 @@
 FROM ubuntu:focal
 
 WORKDIR /app/
-RUN apt-get update --yes && \
-    apt-get upgrade --yes && \
-    apt install --yes --no-install-recommends\
+RUN sudo apt-get update --yes && \
+    sudo apt-get upgrade --yes && \
+    sudo apt install --yes \
     git\
     wget\
     curl\
     apt-get clean && rm -rf /var/lib/apt/lists/* && \
     echo "en_US.UTF-8 UTF-8" > /etc/locale.gen
-RUN apt-get clean
+RUN sudo apt-get clean
 
 ## installing general dependencies
 RUN pip install --upgrade pip 
