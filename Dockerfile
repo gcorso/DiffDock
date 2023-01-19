@@ -1,4 +1,5 @@
-FROM pytorch/pytorch:1.12.1-cuda11.3-cudnn8-runtime
+FROM pytorch/pytorch:1.13.1-cuda11.6-cudnn8-runtime
+# expecting Python 3.8.10
 
 WORKDIR /app
 
@@ -18,7 +19,8 @@ RUN pip install biopandas==0.4.1 --quiet
 
 ## installing torch
 RUN pip uninstall torch-scatter torch-sparse torch-geometric torch-cluster  --yes
-RUN pip install torch-scatter torch-sparse torch-cluster torch-spline-conv torch-geometric -f https://data.pyg.org/whl/torch-1.13.0+cu117.htmlRUN pip install torch-scatter -f https://data.pyg.org/whl/torch-{torch.__version__}.html --quiet
+# RUN pip install torch-scatter torch-sparse torch-cluster torch-spline-conv torch-geometric -f https://data.pyg.org/whl/torch-1.13.0+cu117.htmlRUN pip install torch-scatter -f https://data.pyg.org/whl/torch-{torch.__version__}.html --quiet
+RUN pip install torch-scatter -f https://data.pyg.org/whl/torch-{torch.__version__}.html --quiet
 RUN pip install torch-sparse -f https://data.pyg.org/whl/torch-{torch.__version__}.html --quiet
 RUN pip install torch-cluster -f https://data.pyg.org/whl/torch-{torch.__version__}.html --quiet
 RUN pip install git+https://github.com/pyg-team/pytorch_geometric.git  --quiet
