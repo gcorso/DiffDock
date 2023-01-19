@@ -17,7 +17,7 @@ git clone https://github.com/labdao/diffdock.git
 
 # running the container on ubuntu linux
 #TODO #67 - replace README example with IPFS input
-docker run -v /home/ubuntu/diffdock:/diffdock ghcr.io/labdao/diffdock:main ./diffdock/test.sh
+docker run -v /home/ubuntu/diffdock:/diffdock ghcr.io/labdao/diffdock:main ./test.sh
 ```
 
 ## Public Container Execution
@@ -27,7 +27,7 @@ curl -sL https://get.bacalhau.org/install.sh | bash
 
 # please note that bacalhau currently only supports one mounted IPFS file
 # in this case we provide a protein structure, called test.pdb, via IPFS
-bacalhau docker run ghcr.io/labdao/diffdock:main -- ./diffdock/test.sh
+bacalhau docker run --gpu 1 ghcr.io/labdao/diffdock:main -- ./test.sh
 ```
 
 ## Original README
