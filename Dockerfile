@@ -1,58 +1,35 @@
-FROM nvidia/cuda:11.6.0-cudnn8-devel-ubuntu20.04
+FROM ubuntu:focal
 
-
-RUN chsh -s /bin/bash
-WORKDIR /root/
-
-# basic pod dependencies
-SHELL ["/bin/bash", "-o", "pipefail", "-c"]
-ENV DEBIAN_FRONTEND noninteractive\
-    SHELL=/bin/bash
+WORKDIR /app/
 RUN apt-get update --yes && \
-    # - apt-get upgrade is run to patch known vulnerabilities in apt-get packages as
-    #   the ubuntu base image is rebuilt too seldom sometimes (less than once a month)
     apt-get upgrade --yes && \
     apt install --yes --no-install-recommends\
     git\
     wget\
     curl\
-    git\
-    bash\
-    bzip2\
-    openssh-server &&\
     apt-get clean && rm -rf /var/lib/apt/lists/* && \
     echo "en_US.UTF-8 UTF-8" > /etc/locale.gen
 RUN apt-get clean
 
-# installing model dependencies
-RUN wget --quiet https://repo.anaconda.com/archive/Anaconda3-2020.02-Linux-x86_64.sh -O ~/anaconda.sh && \
-        /bin/bash ~/anaconda.sh -b -p /opt/conda && \
-        rm ~/anaconda.sh && \
-        ln -s /opt/conda/etc/profile.d/conda.sh /etc/profile.d/conda.sh && \
-        echo ". /opt/conda/etc/profile.d/conda.sh" >> ~/.bashrc && \
-        find /opt/conda/ -follow -type f -name '*.a' -delete && \
-        find /opt/conda/ -follow -type f -name '*.js.map' -delete && \
-        /opt/conda/bin/conda clean -afy
-
-ENV PATH /opt/conda/bin:$PATH
-
-## setup conda virtual environment
-COPY ./environment.yml ./environment.yml
-
-RUN conda update conda \
-	&& conda env create --name DiffDock -f ./environment.yml
-
-RUN echo "conda activate DiffDock" >> ~/.bashrc
-ENV PATH /opt/conda/envs/DiffDock/bin:$PATH
-ENV CONDA_DEFAULT_ENV $DiffDock
-
-## install torch specific packages
+## installing general dependencies
 RUN pip install --upgrade pip 
-COPY ./requirements_docker_GPU.txt ./
-RUN pip install --no-cache-dir torch==1.12.1 torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu116
-RUN pip install --no-cache-dir -r ./requirements_docker_GPU.txt
-RUN pip install torch-scatter torch-sparse -f https://data.pyg.org/whl/torch-1.12.1+cu116.html
-RUN pip install torch-geometric torch-cluster -f https://data.pyg.org/whl/torch-1.12.1+cu116.html
+RUN pip install pyg==0.7.1 --quiet
+RUN pip install pyyaml==6.0 --quiet
+RUN pip install scipy==1.7.3 --quiet
+RUN pip install networkx==2.6.3 --quiet
+RUN pip install biopython==1.79 --quiet
+RUN pip install rdkit-pypi==2022.03.5 --quiet
+RUN pip install e3nn==0.5.0 --quiet
+RUN pip install spyrmsd==0.5.2 --quiet
+RUN pip install pandas==1.3.5 --quiet
+RUN pip install biopandas==0.4.1 --quiet
+RUN pip install torch==1.12.1+cu113 --quiet
+
+## installing torch
+RUN pip install torch-scatter -f https://data.pyg.org/whl/torch-{torch.__version__}.html --quiet
+RUN pip install torch-sparse -f https://data.pyg.org/whl/torch-{torch.__version__}.html --quiet
+RUN pip install torch-cluster -f https://data.pyg.org/whl/torch-{torch.__version__}.html --quiet
+RUN pip install git+https://github.com/pyg-team/pytorch_geometric.git  --quiet
 
 ## install esm
 COPY . .
@@ -60,16 +37,6 @@ RUN git submodule init
 RUN git submodule update
 RUN pip install -e ./esm/.
 
-## install jupyter lab extensions
-RUN pip install jupyterlab
-RUN pip install ipywidgets
-RUN pip install jupyter-archive
-RUN jupyter nbextension enable --py widgetsnbextension
-
-## prepare for inference
-ADD start.sh /
-RUN chmod +x /start.sh
 #TODO #68 create proper test
 ADD test.sh /
 RUN chmod +x /test.sh
-CMD [ "./start.sh" ]
