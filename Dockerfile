@@ -53,17 +53,20 @@ RUN pip install --no-cache-dir torch==1.12.1 torchvision torchaudio --extra-inde
 RUN pip install --no-cache-dir -r ./requirements_docker_GPU.txt
 RUN pip install torch-scatter torch-sparse -f https://data.pyg.org/whl/torch-1.12.1+cu116.html
 RUN pip install torch-geometric torch-cluster -f https://data.pyg.org/whl/torch-1.12.1+cu116.html
+
+## install esm
 COPY . .
 RUN git submodule init
 RUN git submodule update
 RUN pip install -e ./esm/.
 
-# install jupyter lab extensions
+## install jupyter lab extensions
 RUN pip install jupyterlab
 RUN pip install ipywidgets
 RUN pip install jupyter-archive
 RUN jupyter nbextension enable --py widgetsnbextension
 
+## prepare for inference
 ADD start.sh /
 RUN chmod +x /start.sh
 #TODO #68 create proper test
