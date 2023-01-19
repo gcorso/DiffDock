@@ -1,4 +1,4 @@
-FROM python:3.9.10
+FROM python:3.8.10
 
 WORKDIR /app
 
@@ -14,7 +14,7 @@ RUN pip install e3nn==0.5.0 --quiet
 RUN pip install spyrmsd==0.5.2 --quiet
 RUN pip install pandas==1.3.5 --quiet
 RUN pip install biopandas==0.4.1 --quiet
-RUN pip install torch==1.12.1+cu113 --quiet
+RUN pip install torch==1.12.1+cu113 torchvision==0.13.1+cu113 torchaudio==0.12.1 --extra-index-url https://download.pytorch.org/whl/cu113
 
 ## installing torch
 RUN pip install torch-scatter -f https://data.pyg.org/whl/torch-{torch.__version__}.html --quiet
