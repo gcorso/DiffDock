@@ -1,15 +1,6 @@
-FROM ubuntu:focal
+FROM python:3.9-slim
 
-WORKDIR /app/
-RUN sudo apt-get update --yes && \
-    sudo apt-get upgrade --yes && \
-    sudo apt install --yes \
-    git\
-    wget\
-    curl\
-    apt-get clean && rm -rf /var/lib/apt/lists/* && \
-    echo "en_US.UTF-8 UTF-8" > /etc/locale.gen
-RUN sudo apt-get clean
+WORKDIR /app
 
 ## installing general dependencies
 RUN pip install --upgrade pip 
@@ -23,7 +14,7 @@ RUN pip install e3nn==0.5.0 --quiet
 RUN pip install spyrmsd==0.5.2 --quiet
 RUN pip install pandas==1.3.5 --quiet
 RUN pip install biopandas==0.4.1 --quiet
-RUN pip install torch==1.12.1+cu113 --quiet
+RUN pip install torch==1.13.1 --quiet
 
 ## installing torch
 RUN pip install torch-scatter -f https://data.pyg.org/whl/torch-{torch.__version__}.html --quiet
