@@ -8,7 +8,7 @@ SHELL ["/bin/bash", "-c"]
 WORKDIR /root/
 
 RUN apt-get update
-RUN apt-get install -y wget bzip2 apt-utils 
+RUN apt-get install -y wget bzip2 apt-utils git
 RUN apt-get clean
 
 
