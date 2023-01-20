@@ -17,7 +17,7 @@ git clone https://github.com/labdao/diffdock.git
 
 # running the container on ubuntu linux
 #TODO #67 - replace README example with IPFS input
-docker run -gpus all -v /home/ubuntu/diffdock:/diffdock ghcr.io/labdao/diffdock:main ./test.sh
+docker run --gpus all -v /home/ubuntu/diffdock:/diffdock ghcr.io/labdao/diffdock:main ./test.sh
 ```
 
 ## Public Container Execution
