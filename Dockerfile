@@ -50,4 +50,5 @@ RUN git submodule init
 RUN git submodule update
 RUN pip install -e ./esm/.
 
+RUN chmod 777 test.sh
 CMD ["bash"]
