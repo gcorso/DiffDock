@@ -27,5 +27,3 @@ spyrmsd==0.5.2
 sympy==1.11.1
 threadpoolctl==3.1.0
 tqdm==4.64.1
-
-
