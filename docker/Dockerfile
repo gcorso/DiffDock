@@ -10,10 +10,10 @@ ENV DEBIAN_FRONTEND=noninteractive \
     CHOWN_HOME=yes \
     GRANT_SUDO=yes \
     RESTARTABLE=yes \
-    SETUPTOOLS_USE_DISTUTILS=stdlib
+    SETUPTOOLS_USE_DISTUTILS=stdlib \
+    PIP_ROOT_USER_ACTION=ignore
 
 USER root
-
 
 ## Install Basic Dependencies
 RUN apt-get clean && \
@@ -69,10 +69,10 @@ RUN cd /content/DiffDock && \
     chmod +x smina
 
 ## Copy Sample Notebook
-COPY ./DiffDock_sample_notebook.ipynb /content/DiffDockc
+COPY ./DiffDock_sample_notebook.ipynb /content/DiffDock
 
 ## Update /content permissions
-RUN chmod -R 777 /content
+RUN chmod -R 770 /content
 
 ## Set Working Directory
 WORKDIR /content/DiffDock
