@@ -11,6 +11,50 @@ X_N = 2000
     cached to memory, therefore the precomputation is only run the first time the repository is run on a machine
 """
 
+"""
+General
+
+    This code is preprocessing some data for working with rotations in 3-dimensional space, which can be represented by the group SO(3). 
+    The preprocessing calculates and caches some data that is used in later computations to generate random rotations with a particular distribution.
+
+    The distribution of rotations is determined by a value called eps, which sets the scale of the distribution. 
+    The code precomputes and caches various pieces of information for different values of eps ranging from a minimum value to a maximum value. 
+    This precomputation is only run once, so that it can be used later without having to redo the calculation every time.
+
+    The precomputed information includes the values of the distribution's density and cumulative distribution functions, as well as some 
+    information about the score (derivative) of the density and its normalization. All of these values are related to the way that rotations 
+    are distributed for different values of eps.
+
+    The code uses several helper functions to perform these computations. The _compose function composes two rotations represented by Euler vectors. 
+    The _expansion function calculates the sum term in a truncated infinite series representation of the density of the distribution. 
+    The _density function calculates the density of the distribution. The _score function calculates the score (derivative) of the density.
+
+    Finally, the code saves all the precomputed data to disk, so that it can be loaded and used later without having to perform the calculations again. 
+    The sample function uses the precomputed data to generate random rotations with the specified distribution.
+
+Specific
+
+    The code implements precomputation for a distribution over the special orthogonal group SO(3), a group of 3D rotations. 
+    It provides a method to sample from this distribution and calculate relevant statistics.
+
+    The distribution is parameterized by a scalar eps and it is computed using a truncated infinite series. The code computes a
+    nd caches to disk the series terms, CDF values, score norms, and expected score norms for a range of values for eps. If these 
+    arrays have already been computed and saved, they are loaded from disk to memory, otherwise they are computed and saved.
+
+    The _compose method calculates the composition of two rotations represented as Euler vectors. The _expansion method calculates 
+    the series term for a given omega and eps. The _density method calculates the density over either [0, pi] or SO(3), depending on 
+    the value of the marginal parameter. The _score method calculates the score of the density over SO(3).
+
+    The sample method samples from the distribution, given a value of eps, by finding the closest precomputed eps_idx and using 
+    linear interpolation on the corresponding precomputed CDF values. The pdf method calculates the density at a given omega and 
+    eps by linear interpolation on the precomputed _exp_vals. The score method calculates the score of the density at a given omega 
+    and eps by linear interpolation on the precomputed _score_norms. The score_norm method calculates the expected score norm for a 
+    given eps by linear interpolation on the precomputed _exp_score_norms.
+
+
+
+"""
+
 omegas = np.linspace(0, np.pi, X_N + 1)[1:]
 
 

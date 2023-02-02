@@ -16,6 +16,20 @@ from models.score_model import TensorProductScoreModel as CGScoreModel
 from utils.diffusion_utils import get_timestep_embedding
 from spyrmsd import rmsd, molecule
 
+"""
+The main functions are:
+
+    get_obrmsd: Computes the Root Mean Square Deviation (RMSD) between two molecular structures.
+    remove_all_hs: Removes all hydrogen atoms in a molecular structure.
+    read_strings_from_txt: Reads text strings from a file and returns them as a list.
+    save_yaml_file: Saves a Python object as a YAML file.
+    get_optimizer_and_scheduler: Returns the optimizer and scheduler for training a model.
+    get_model: Returns a model for scoring molecular structures.
+    train: Trains a model on molecular structure data.
+    get_score: Scores a molecular structure.
+    predict: Predicts molecular structures with the trained model.
+
+"""
 
 def get_obrmsd(mol1_path, mol2_path, cache_name=None):
     cache_name = datetime.now().strftime('date%d-%m_time%H-%M-%S.%f') if cache_name is None else cache_name

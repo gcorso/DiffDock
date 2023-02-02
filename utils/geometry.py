@@ -2,6 +2,57 @@ import math
 
 import torch
 
+"""
+
+    Python implementation of several functions for rotation representation and conversion, 
+    using the PyTorch library.
+
+    Rotation can be represented in multiple ways, including axis-angle representation, 
+    quaternions, and rotation matrices. These functions allow converting between these 
+    representations, and they also implement the Kabsch algorithm to calculate the 
+    optimal rotation matrix between two sets of 3D points.
+
+    Quaternion to Matrix
+    This function takes in a tensor of shape (..., 4) representing quaternions, 
+    where the first element is the real part and the next three elements are the 
+    imaginary parts. The function then calculates the corresponding rotation matrix, 
+    which is a tensor of shape (..., 3, 3).
+
+    Axis-Angle to Quaternion
+    This function takes in a tensor of shape (..., 3) representing rotations 
+    in axis-angle form, where the magnitude of the vector is the angle turned 
+    anticlockwise in radians around the direction of the vector. The function 
+    calculates the corresponding quaternion, which is a tensor of shape (..., 4)
+    with the real part first.
+
+    Axis-Angle to Matrix
+    This function takes in a tensor of shape (..., 3) representing rotations 
+    in axis-angle form, and calculates the corresponding rotation matrix, 
+    which is a tensor of shape (..., 3, 3). This function uses the axis-angle 
+    to quaternion function to first convert the axis-angle representation to 
+    quaternions, and then uses the quaternion to matrix function to obtain 
+    the rotation matrix.
+
+    Rigid Transform Kabsch 3D (Torch)
+    This function calculates the optimal rigid transformation (rotation and translation) 
+    between two sets of 3D points, represented as matrices A and B. The input matrices 
+    must have the same number of columns (features) and A must have 3 rows (3D points). 
+    The function returns the rotation matrix and translation vector of the optimal 
+    rigid transformation. The Kabsch algorithm used here is a method to find the 
+    optimal rotation matrix that minimizes the sum of squared distances between 
+    the corresponding points in A and B after applying the rotation.
+
+    Simple examples:
+
+        Suppose you have a rotation represented by a vector of shape (3,) with values [0.1, 0.2, 0.3]. 
+        You can use the axis_angle_to_quaternion function to convert it to a quaternion of shape (4,).
+
+        Suppose you have a quaternion represented by a tensor of shape (1, 4) with values [0.5, 0.2, 0.3, 0.1]. 
+        You can use the quaternion_to_matrix function to convert it to a rotation matrix of shape (1, 3, 3).
+
+        Suppose you have two sets of 3D points, A and B, represented by matrices with shapes (3, 5) and (3, 5) respectively. 
+        You can use the rigid_transform_Kabsch_3D_torch function to find the optimal rotation matrix and translation vector to transform A to best align with B.
+"""
 
 def quaternion_to_matrix(quaternions):
     """

@@ -7,6 +7,52 @@ from utils.torsion import modify_conformer_torsion_angles
 from scipy.spatial.transform import Rotation as R
 
 
+"""
+    The code is a python script that implements a diffusion docking simulation using the molecular conformer model. 
+    It uses numpy and torch libraries, as well as torch_geometric library for graph processing.
+
+    The script contains two main functions, randomize_position and sampling.
+
+    The randomize_position function is used to randomly modify the position of a molecule in 3D space. 
+    The function modifies the input data_list in place. The data_list is a list of molecular complexes, 
+    each represented by a graph structure with node features and edges.
+
+    The function first checks if the argument no_torsion is False. If so, it modifies the torsion angles 
+    of the molecule in each complex. The torsion angles determine the orientation of the bonds between 
+    atoms in the molecule. The torsion angles are updated randomly using a uniform distribution over 
+    the range of (-π, π).
+
+    After updating the torsion angles, the function modifies the position of the molecule in each complex. 
+    The positions of the atoms are shifted relative to the center of the molecule, and then a random rotation 
+    is applied to the whole molecule. Finally, if the argument no_random is False, the position of the molecule 
+    is shifted by a random amount in the three dimensions.
+
+    The sampling function is used to perform the diffusion docking simulation. The function takes as input a 
+    data_list of molecular complexes, a model that represents the molecular conformer model, and several 
+    arguments controlling the simulation, such as inference_steps, tr_schedule, rot_schedule, tor_schedule, 
+    device, t_to_sigma, model_args, etc.
+
+    The simulation runs for inference_steps time steps. In each time step, the function first updates the 
+    tr_sigma, rot_sigma, and tor_sigma values based on the current time step and the provided tr_schedule, 
+    rot_schedule, and tor_schedule. These values determine the magnitude of the random updates to the position 
+    and orientation of the molecule in each complex.
+
+    Next, the function uses a DataLoader from the torch_geometric library to process the data_list in batches. 
+    For each batch of molecular complexes, the function updates the time information for each complex and passes 
+    the batch to the model for inference. The model outputs scores for each complex, representing the likelihood 
+    of each complex having a certain position and orientation.
+
+    Based on the scores and the current tr_sigma, rot_sigma, and tor_sigma values, the function updates the 
+    position and orientation of each complex in the batch by adding random perturbations. The updated complex 
+    information is then added to the new_data_list, which will be used as input for the next time step.
+
+    The simulation can be controlled with several optional arguments, such as no_random (disable random updates), 
+    ode (use ODE solver instead of Monte Carlo sampling), visualization_list (add complex information to a list 
+    for visualization), confidence_model (use another model to estimate confidence scores), confidence_data_list 
+    (input data for the confidence model), and batch_size (batch size for data processing).
+"""
+
+
 def randomize_position(data_list, no_torsion, no_random, tr_sigma_max):
     # in place modification of the list
     if not no_torsion:

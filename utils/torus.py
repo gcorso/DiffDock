@@ -5,6 +5,17 @@ import os
 """
     Preprocessing for the SO(2)/torus sampling and score computations, truncated infinite series are computed and then
     cached to memory, therefore the precomputation is only run the first time the repository is run on a machine
+
+    The code defines two functions p and grad that compute a probability distribution over the SO(2) group/torus 
+    (a 2-dimensional mathematical object). These functions calculate a truncated infinite series, which is 
+    computationally expensive. To speed up computations, the code caches the precomputed values in memory for future use, 
+    so the precomputation only needs to be performed once.
+
+    The code also defines functions score, p, and sample, which use the precomputed p and grad values to quickly compute 
+    the score of a given value in the torus and sample from the torus distribution.
+
+    For example, if we have x and sigma values, we can call score(x, sigma) to get the score for that combination of values. 
+    Similarly, if we have a sigma value, we can call sample(sigma) to get a random sample from the torus distribution with that sigma value.
 """
 
 

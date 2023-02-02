@@ -11,6 +11,36 @@ from e3nn.nn import BatchNorm
 
 from utils import so3, torus
 from datasets.process_mols import lig_feature_dims, rec_residue_feature_dims
+ 
+"""
+    Here they define a PyTorch module called AtomEncoder. This module is used to encode the atomic features of a 
+    molecule into a vector representation. The atomic features can be either categorical (e.g. element type) or scalar 
+    (e.g. partial charge). The module takes as input the number of dimensions of the embedding (emb_dim), the dimensions 
+    of the atomic features (feature_dims), and the number of dimensions for a type of molecular representation called sigma_embed_dim.
+
+    The module uses an nn.ModuleList to store multiple nn.Embedding modules, one for each categorical feature. 
+    Each nn.Embedding module maps an integer representing the category to an embedding vector. If the molecule 
+    has any scalar features, these are concatenated to the embedding vectors from the categorical features and 
+    passed through a nn.Linear module to get a final embedding vector.
+
+    The TensorProductConvLayer module is a type of neural network layer that operates on graphs. The layer takes 
+    as input a graph, with nodes representing atoms in the molecule, and edges representing bonds between atoms. 
+    The nodes of the graph are assigned features, which in this case are the embeddings from the AtomEncoder module. 
+    The layer operates on the graph by performing a tensor product on the node features, which allows for the 
+    capture of relationships between multiple nodes.
+
+    The layer is initialized with the number of input irreps (in_irreps), number of spherical harmonics irreps (sh_irreps), 
+    number of output irreps (out_irreps), and the number of features on the edges of the graph (n_edge_features). 
+    The layer also takes in optional parameters like residual (whether to add the input features back to the output features), 
+    batch_norm (whether to apply batch normalization), dropout (amount of dropout to apply), and hidden_features 
+    (number of hidden features in the fully connected layers).
+
+    The layer contains a tp (tensor product) module from the e3nn library, which performs the tensor product operation. 
+    The edge features are passed through a fully connected neural network to get the weights for the tensor product 
+    operation. Finally, the output features from the tensor product operation are batch normalized if batch_norm is 
+    set to True, and the input features are added to the output features if residual is set to True.
+
+"""
 
 
 class AtomEncoder(torch.nn.Module):

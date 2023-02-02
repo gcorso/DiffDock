@@ -7,6 +7,28 @@ from torch_geometric.data import Data
 
 """
     Preprocessing and computation for torsional updates to conformers
+
+            The given code is a Python script that modifies 3D molecular conformer geometries. 
+            It mainly has three functions: get_transformation_mask(), modify_conformer_torsion_angles(), 
+            and perturb_batch().
+
+            get_transformation_mask takes a graph-based representation of the molecular geometry, represented 
+            by a PyTorch geometric data object, and returns two masks that specify which edges of the graph 
+            can be modified and which parts of the graph they affect.
+
+            modify_conformer_torsion_angles takes a set of 3D positions, an edge index that specifies connections 
+            between these points, the masks returned by get_transformation_mask, and an array of torsion updates, 
+            and returns the modified set of positions. The function rotates the part of the graph specified by the 
+            masks about the edges by the specified torsion updates.
+
+            perturb_batch takes a PyTorch geometric data object and torsion updates, and applies the updates to 
+            all conformers in the batch by calling modify_conformer_torsion_angles for each conformer.
+
+            Example:
+            Consider a molecule represented by a set of 3D positions and edges connecting them. 
+            get_transformation_mask determines which edges and parts of the molecule can be modified by torsion updates. 
+            modify_conformer_torsion_angles then rotates the specified parts of the molecule about the edges by the given 
+            torsion updates.
 """
 
 

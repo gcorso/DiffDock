@@ -10,6 +10,53 @@ from utils.sampling import randomize_position, sampling
 import torch
 from utils.diffusion_utils import get_t_schedule
 
+"""
+    The code defines a loss function that calculates the difference between predicted values and true values, 
+    considering multiple factors (i.e. translation, rotation and torsion) for a set of data samples. 
+    It uses numpy and torch_geometric.loader for data processing, and so3 and torus from the utils module for certain calculations.
+
+    The function loss_function inputs are:
+
+        tr_pred: predicted translations
+        rot_pred: predicted rotations
+        tor_pred: predicted torsions
+        data: a set of data samples
+        t_to_sigma: a function that converts time values to scale values
+        device: a device object indicating which device to run the calculations on, either CPU or GPU
+        tr_weight: weight for translation component
+        rot_weight: weight for rotation component
+        tor_weight: weight for torsion component
+        apply_mean: a boolean flag to indicate if mean calculation should be performed
+        no_torsion: a boolean flag to indicate if torsion component should be ignored
+
+
+        tr_pred: a tensor representing the predicted translations for a set of data samples. This is expected to be a 2D tensor with shape (n, 3), where n is the number of samples.
+
+        rot_pred: a tensor representing the predicted rotations for a set of data samples. This is expected to be a 2D tensor with shape (n, 4), where n is the number of samples.
+
+        tor_pred: a tensor representing the predicted torsions for a set of data samples. This is expected to be a 2D tensor with shape (n, 3), where n is the number of samples.
+
+        data: a set of data samples, expected to be a dictionary containing the true values of translations, rotations and torsions, as well as the scale values for each of them.
+
+        t_to_sigma: a function that converts time values to scale values, which are used to weight the error between the predicted and true values.
+
+        device: a device object indicating which device to run the calculations on, either CPU or GPU. This is used to move the tensors to the specified device.
+
+        tr_weight: a scalar representing the weight for the translation component of the loss function. This value is used to balance the relative importance of each component of the loss.
+
+        rot_weight: a scalar representing the weight for the rotation component of the loss function. This value is used to balance the relative importance of each component of the loss.
+
+        tor_weight: a scalar representing the weight for the torsion component of the loss function. This value is used to balance the relative importance of each component of the loss.
+
+        apply_mean: a boolean flag to indicate if the mean calculation should be performed. If apply_mean is True, the loss value will be the mean of the loss values for each sample. If apply_mean is False, the loss value will be the sum of the loss values for each sample.
+
+        no_torsion: a boolean flag to indicate if the torsion component should be ignored. If no_torsion is True, the torsion component will be excluded from the loss calculation. If no_torsion is False, the torsion component will be included in the loss calculation.
+
+    The function returns a loss value for each data sample, considering the translation, rotation, and torsion components, 
+    with each component weighted by the corresponding weight. The loss is calculated as the mean of the squared difference 
+    between the predicted values and the true values, multiplied by the scale factor obtained from t_to_sigma. 
+    The mean calculation can be skipped if apply_mean is set to False. If no_torsion is True, the torsion component is not considered.
+"""
 
 def loss_function(tr_pred, rot_pred, tor_pred, data, t_to_sigma, device, tr_weight=1, rot_weight=1,
                   tor_weight=1, apply_mean=True, no_torsion=False):

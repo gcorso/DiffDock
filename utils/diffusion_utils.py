@@ -8,6 +8,44 @@ from scipy.stats import beta
 from utils.geometry import axis_angle_to_matrix, rigid_transform_Kabsch_3D_torch
 from utils.torsion import modify_conformer_torsion_angles
 
+"""
+    A set of functions and classes for performing various transformations on a 3D molecular structure. 
+    The code is written in Python and uses the PyTorch library for tensor operations.
+
+    t_to_sigma: This function takes in three inputs, t_tr, t_rot, and t_tor, as well as an object args 
+    that contains parameters, and returns three outputs tr_sigma, rot_sigma, and tor_sigma. It uses 
+    the inputs t_tr, t_rot, and t_tor to compute the values of the sigmas, which are the standard 
+    deviations of three types of transformations applied to the molecular structure: translation, 
+    rotation, and torsion angle.
+
+    modify_conformer: This function takes in a dictionary data that contains information about the 
+    molecular structure, as well as three transformations, tr_update, rot_update, and torsion_updates, 
+    and returns the modified molecular structure. The function first calculates the center of mass 
+    of the ligand and uses it to translate the ligand. Then, it performs rotation using rot_update. 
+    If there is a torsion_update, it modifies the torsion angles of the molecular structure using 
+    the modify_conformer_torsion_angles function. Finally, it aligns the flexible conformer with 
+    the rigid conformer using the rigid_transform_Kabsch_3D_torch function.
+
+    sinusoidal_embedding: This function takes in a tensor timesteps and two parameters, embedding_dim 
+    and max_positions, and returns a tensor of sinusoidal embeddings. This function is used to embed 
+    the time steps of a molecular simulation in a continuous space, which is useful for learning 
+    a smooth representation of the simulation over time.
+
+    GaussianFourierProjection: This class extends the nn.Module class from PyTorch and implements 
+    Gaussian Fourier embeddings for noise levels. The class has two parameters, embedding_size and 
+    scale, that determine the size and scale of the embeddings. The class has a forward method that 
+    computes the embeddings based on a given input.
+
+    get_timestep_embedding: This function takes in three parameters, embedding_type, embedding_dim,
+    and embedding_scale, and returns an instance of either sinusoidal_embedding or GaussianFourierProjection, 
+    depending on the value of embedding_type.
+
+    A simple example of using the code could be to modify a molecular structure by rotating it 
+    around its center of mass. To do this, you would first create an instance of the molecular 
+    structure as a dictionary with the necessary information and pass it to the modify_conformer 
+    function along with a rotation update. The rotation update can be a tensor with the rotation 
+    angles, and torsion_updates could be set to None.
+"""
 
 def t_to_sigma(t_tr, t_rot, t_tor, args):
     tr_sigma = args.tr_sigma_min ** (1-t_tr) * args.tr_sigma_max ** t_tr
