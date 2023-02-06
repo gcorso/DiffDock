@@ -95,7 +95,7 @@ class TensorProductScoreModel(torch.nn.Module):
                  center_max_distance=30, distance_embed_dim=32, cross_distance_embed_dim=32, no_torsion=False,
                  scale_by_sigma=True, use_second_order_repr=False, batch_norm=True,
                  dynamic_max_cross=False, dropout=0.0, lm_embedding_type=None, confidence_mode=False,
-                 confidence_dropout=0, confidence_no_batchnorm=False, num_confidence_outputs=1):
+                 confidence_dropout=0, confidence_no_batchnorm=False, num_confidence_outputs=1, no_aminoacid_identities=False):
         super(TensorProductScoreModel, self).__init__()
         self.t_to_sigma = t_to_sigma
         self.in_lig_edge_features = in_lig_edge_features
@@ -115,6 +115,7 @@ class TensorProductScoreModel(torch.nn.Module):
         self.timestep_emb_func = timestep_emb_func
         self.confidence_mode = confidence_mode
         self.num_conv_layers = num_conv_layers
+        self.no_aminoacid_identities = no_aminoacid_identities
 
         self.lig_node_embedding = AtomEncoder(emb_dim=ns, feature_dims=lig_feature_dims, sigma_embed_dim=sigma_embed_dim)
         self.lig_edge_embedding = nn.Sequential(nn.Linear(in_lig_edge_features + sigma_embed_dim + distance_embed_dim, ns),nn.ReLU(), nn.Dropout(dropout),nn.Linear(ns, ns))
@@ -232,6 +233,9 @@ class TensorProductScoreModel(torch.nn.Module):
                 )
 
     def forward(self, data):
+        if self.no_aminoacid_identities:
+            data['receptor'].x = data['receptor'].x * 0
+
         if not self.confidence_mode:
             tr_sigma, rot_sigma, tor_sigma = self.t_to_sigma(*[data.complex_t[noise_type] for noise_type in ['tr', 'rot', 'tor']])
         else:
