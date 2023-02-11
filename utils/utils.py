@@ -117,8 +117,7 @@ def get_model(args, device, t_to_sigma, no_parallel=False, confidence_mode=False
                         confidence_mode=confidence_mode,
                         num_confidence_outputs=len(
                             args.rmsd_classification_cutoff) + 1 if 'rmsd_classification_cutoff' in args and isinstance(
-                            args.rmsd_classification_cutoff, list) else 1,
-                        no_aminoacid_identities=args.no_aminoacid_identities if "no_aminoacid_identities" in args else False)
+                            args.rmsd_classification_cutoff, list) else 1)
 
     if device.type == 'cuda' and not no_parallel:
         model = DataParallel(model)

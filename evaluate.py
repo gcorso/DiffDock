@@ -28,8 +28,6 @@ parser.add_argument('--model_dir', type=str, default='workdir', help='Path to fo
 parser.add_argument('--ckpt', type=str, default='best_model.pt', help='Checkpoint to use inside the folder')
 parser.add_argument('--confidence_model_dir', type=str, default=None, help='Path to folder with trained confidence model and hyperparameters')
 parser.add_argument('--confidence_ckpt', type=str, default='best_model.pt', help='Checkpoint to use inside the folder')
-parser.add_argument('--affinity_model_dir', type=str, default=None, help='Path to folder with trained affinity model and hyperparameters')
-parser.add_argument('--affinity_ckpt', type=str, default='best_model.pt', help='Checkpoint to use inside the folder')
 parser.add_argument('--num_cpu', type=int, default=None, help='if this is a number instead of none, the max number of cpus used by torch will be set to this.')
 parser.add_argument('--run_name', type=str, default='test', help='')
 parser.add_argument('--project', type=str, default='ligbind_inf', help='')
@@ -161,7 +159,7 @@ tor_schedule = tr_schedule
 print('t schedule', tr_schedule)
 
 rmsds_list, obrmsds, centroid_distances_list, failures, skipped, min_cross_distances_list, base_min_cross_distances_list, confidences_list, names_list = [], [], [], 0, 0, [], [], [], []
-true_affinities_list, pred_affinities_list, run_times, min_self_distances_list, without_rec_overlap_list = [], [], [], [], []
+run_times, min_self_distances_list, without_rec_overlap_list = [], [], []
 N = args.samples_per_complex
 names_no_rec_overlap = read_strings_from_txt(f'data/splits/timesplit_test_no_rec_overlap')
 print('Size of test dataset: ', len(test_dataset))

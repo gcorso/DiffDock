@@ -41,34 +41,27 @@ This is an example for how to set up a working conda environment to run the code
     pip install torch-scatter torch-sparse torch-cluster torch-spline-conv torch-geometric -f https://data.pyg.org/whl/torch-1.13.0+cu117.html
     python -m pip install PyYAML scipy "networkx[default]" biopython rdkit-pypi e3nn spyrmsd pandas biopandas
 
+Then you need to install ESM that we use both for protein sequence embeddings and for the protein structure prediction in case you only have the sequence of your target. Note that OpenFold (and so ESMFold) requires a GPU. If you don't have a GPU, you can still use DiffDock with existing protein structures.
+
+    pip install "fair-esm[esmfold]"
+    pip install 'dllogger @ git+https://github.com/NVIDIA/dllogger.git'
+    pip install 'openfold @ git+https://github.com/aqlaboratory/openfold.git@4b41059694619831a7db195b7e0988fc4ff3a307'
+
+
 # Running DiffDock on your own complexes
 We support multiple input formats depending on whether you only want to make predictions for a single complex or for many at once.\
-The protein inputs need to be .pdb files. The ligand input can either be a SMILES string or a filetype that RDKit can read like `.sdf` or `.mol2`.
+The protein inputs need to be `.pdb` files or sequences that will be folded with ESMFold. The ligand input can either be a SMILES string or a filetype that RDKit can read like `.sdf` or `.mol2`.
 
-For a single complex: specify the protein with, e.g., `--protein_path protein.pdb` and the ligand with `--ligand ligand.sdf` or `--ligand "COc(cc1)ccc1C#N"`
+For a single complex: specify the protein with `--protein_path protein.pdb` or `--protein_sequence GIQSYCTPPYSVLQDPPQPVV` and the ligand with `--ligand ligand.sdf` or `--ligand "COc(cc1)ccc1C#N"`
 
-For many complexes: create a csv file with paths to proteins and ligand files or SMILES. The first column of the .csv has to be called `protein_path` and the second one `ligand`.
+For many complexes: create a csv file with paths to proteins and ligand files or SMILES. It contains as columns `complex_name` (name used to save predictions, can be left empty), `protein_path` (path to `.pdb` file, if empty uses sequence), `ligand_description` (SMILE or file path)  and `protein_sequence` (to fold with ESMFold in case the protein_path is empty).
 An example .csv is at `data/protein_ligand_example_csv.csv` and you would use it with `--protein_ligand_csv protein_ligand_example_csv.csv`.
 
-### Generate the ESM2 embeddings for the proteins
-We will soon also provide weights of a trained model without ESM2 embeddings such that this step is not necessary. Luckily, it is rather easy. First prepare a fasta for ESM2 (for a single protein use `--protein_path protein.pdb` instead):
-
-    python datasets/esm_embedding_preparation.py --protein_ligand_csv data/protein_ligand_example_csv.csv --out_file data/prepared_for_esm.fasta 
-    
-Generate the embeddings with ESM2 (assuming that you are in the DiffDock directory):
-
-    git clone https://github.com/facebookresearch/esm
-    cd esm
-    pip install -e .
-    cd ..
-    HOME=esm/model_weights python esm/scripts/extract.py esm2_t33_650M_UR50D data/prepared_for_esm.fasta data/esm2_output --repr_layers 33 --include per_tok --truncation_seq_length 4096
-    
-And done, that is it!
-
-### Run inference
+And you are ready to run inference:
 
     python -m inference --protein_ligand_csv data/protein_ligand_example_csv.csv --out_dir results/user_predictions_small --inference_steps 20 --samples_per_complex 40 --batch_size 10 --actual_steps 18 --no_final_step_noise
 
+When providing the `.pdb` files you can run DiffDock also on CPU, however, if possible, we recommend using a GPU as the model runs significantly faster.  
 
 
 # Retraining DiffDock
@@ -81,7 +74,7 @@ First run:
 
 Use the generated file `data/pdbbind_sequences.fasta` to generate the ESM2 language model embeddings using the library https://github.com/facebookresearch/esm by installing their repository and executing the following in their repository:
 
-    python scripts/extract.py esm2_t33_650M_UR50D pdbbind_sequences.fasta embeddings_output --repr_layers 33 --include per_tok --truncation_seq_length 4096
+    python scripts/extract.py esm2_t33_650M_UR50D pdbbind_sequences.fasta embeddings_output --repr_layers 33 --include per_tok
 
 This generates the `embeddings_output` directory which you have to copy into the `data` folder of our repository to have `data/embeddings_output`.
 Then run the command:
@@ -133,11 +126,11 @@ Now everything is trained and you can run inference with:
 
 
 ## Citation
-    @article{corso2022diffdock,
+    @article{corso2023diffdock,
           title={DiffDock: Diffusion Steps, Twists, and Turns for Molecular Docking}, 
           author = {Corso, Gabriele and Stärk, Hannes and Jing, Bowen and Barzilay, Regina and Jaakkola, Tommi},
-          journal={arXiv preprint arXiv:2210.01776},
-          year={2022}
+          journal={International Conference on Learning Representations (ICLR)},
+          year={2023}
     }
 
 ## License
