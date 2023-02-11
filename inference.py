@@ -123,7 +123,7 @@ for idx, orig_complex_graph in tqdm(enumerate(test_loader)):
     try:
         if confidence_test_dataset is not None:
             confidence_complex_graph = confidence_test_dataset[idx]
-            if not ((device == torch.device('cuda') and confidence_complex_graph.success[0]) or (device == torch.device('cpu') and confidence_complex_graph.success)):
+            if not confidence_complex_graph.success:
                 skipped += 1
                 print(f"HAPPENING | The confidence dataset did not contain {orig_complex_graph.name}. We are skipping this complex.")
                 continue
