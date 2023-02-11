@@ -150,7 +150,7 @@ class TensorProductScoreModel(torch.nn.Module):
                     batch_norm=batch_norm
                 )
                 self.tor_final_layer = nn.Sequential(
-                    nn.Linear(2 * ns if not self.odd_parity else ns, ns, bias=False),
+                    nn.Linear(2 * ns, ns, bias=False),
                     nn.Tanh(),
                     nn.Dropout(dropout),
                     nn.Linear(ns, 1, bias=False)
