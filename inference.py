@@ -71,7 +71,7 @@ device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 if args.protein_ligand_csv is not None:
     df = pd.read_csv(args.protein_ligand_csv)
-    protein_path_list = df['protein_path'].tolist()
+    protein_path_list = df['protein'].tolist()
     ligand_descriptions = df['ligand'].tolist()
 else:
     protein_path_list = [args.protein_path]
