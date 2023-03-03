@@ -4,7 +4,11 @@
 
 ### Build
 ```sh
-docker build -t diffdock .
+# with JupyterLab
+docker build -t diffdock -f JupterLab_Dockerfile .
+
+# with NVIDIA Base Image and PyTorch (CLI)
+docker build -t diffdock -f CLI_Dockerfile .
 ```
 
 ### Run
