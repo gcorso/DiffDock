@@ -185,7 +185,6 @@ for idx, orig_complex_graph in tqdm(enumerate(test_loader)):
 
     except Exception as e:
         print("Failed on", orig_complex_graph["name"], e)
-        raise e
         failures += 1
 
 print(f'Failed for {failures} complexes')
