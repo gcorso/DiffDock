@@ -49,7 +49,7 @@ if args.protein_path is not None:
     file_paths = [args.protein_path]
 else:
     df = pd.read_csv(args.protein_ligand_csv)
-    file_paths = list(set(df['protein_path'].tolist()))
+    file_paths = list(set(df['protein'].tolist()))
 sequences = []
 ids = []
 for file_path in tqdm(file_paths):
