@@ -3,7 +3,7 @@ atom_max_neighbors: 8
 atom_radius: 5
 batch_size: 16
 c_alpha_max_neighbors: 24
-cache_path: /data/rsg/nlp/hstark/ligbind/data/cacheNew
+cache_path: data/cacheNew
 confidence_dropout: 0.0
 confidence_no_batchnorm: false
 config: null
