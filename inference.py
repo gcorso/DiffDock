@@ -25,6 +25,7 @@ parser.add_argument('--complex_name', type=str, default='1a0q', help='Name that 
 parser.add_argument('--protein_path', type=str, default=None, help='Path to the protein file')
 parser.add_argument('--protein_sequence', type=str, default=None, help='Sequence of the protein for ESMFold, this is ignored if --protein_path is not None')
 parser.add_argument('--ligand_description', type=str, default='CCCCC(NC(=O)CCC(=O)O)P(=O)(O)OC1=CC=CC=C1', help='Either a SMILES string or the path to a molecule file that rdkit can read')
+parser.add_argument('--precomuted_lm_embeddings', type=str, default=None, help='Path to embeddings.pt file with precomputed embedding.')
 
 parser.add_argument('--out_dir', type=str, default='results/user_inference', help='Directory where the outputs will be written to')
 parser.add_argument('--save_visualisation', action='store_true', default=False, help='Save a pdb file with all of the steps of the reverse diffusion')
@@ -71,6 +72,7 @@ for name in complex_name_list:
 test_dataset = InferenceDataset(out_dir=args.out_dir, complex_names=complex_name_list, protein_files=protein_path_list,
                                 ligand_descriptions=ligand_description_list, protein_sequences=protein_sequence_list,
                                 lm_embeddings=score_model_args.esm_embeddings_path is not None,
+
                                 receptor_radius=score_model_args.receptor_radius, remove_hs=score_model_args.remove_hs,
                                 c_alpha_max_neighbors=score_model_args.c_alpha_max_neighbors,
                                 all_atoms=score_model_args.all_atoms, atom_radius=score_model_args.atom_radius,

@@ -1,0 +1,29 @@
+run_name : "small_score_model"
+test_sigma_intervals: True
+log_dir : "workdir"
+data_dir : "../PDBBind_processed/"
+esm_embeddings_path : "data/esm2_3billion_embeddings.pt"
+lr : 0.001
+tr_sigma_min : 0.1
+tr_sigma_max : 34
+rot_sigma_min : 0.03
+rot_sigma_max : 1.55
+batch_size : 16
+ns : 24
+nv : 6
+num_conv_layers : 5
+dynamic_max_cross :
+scheduler : "plateau"
+scale_by_sigma : True
+dropout : 0.1
+wandb: True
+remove_hs : True
+c_alpha_max_neighbors : 24
+receptor_radius : 15
+num_dataloader_workers : 1
+cudnn_benchmark : True
+val_inference_freq : 5
+num_inference_complexes : 500
+use_ema : True
+scheduler_patience : 30
+n_epochs : 50

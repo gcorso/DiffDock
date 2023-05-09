@@ -1,17 +1,17 @@
 from rdkit.Chem.rdmolfiles import MolToPDBBlock, MolToPDBFile
-import rdkit.Chem 
+import rdkit.Chem
 from rdkit import Geometry
 from collections import defaultdict
 import copy
 import numpy as np
 import torch
 
-    
+
 class PDBFile:
     def __init__(self, mol):
         self.parts = defaultdict(dict)
         self.mol = copy.deepcopy(mol)
-        [self.mol.RemoveConformer(j) for j in range(mol.GetNumConformers()) if j]        
+        [self.mol.RemoveConformer(j) for j in range(mol.GetNumConformers()) if j]
     def add(self, coords, order, part=0, repeat=1):
         if type(coords) in [rdkit.Chem.Mol, rdkit.Chem.RWMol]:
             block = MolToPDBBlock(coords).split('\n')[:-2]
@@ -25,7 +25,7 @@ class PDBFile:
             self.mol.GetConformer(0).SetAtomPosition(i, Geometry.Point3D(coords[i, 0], coords[i, 1], coords[i, 2]))
         block = MolToPDBBlock(self.mol).split('\n')[:-2]
         self.parts[part][order] = {'block': block, 'repeat': repeat}
-        
+
     def write(self, path=None, limit_parts=None):
         is_first = True
         str_ = ''

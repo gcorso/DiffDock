@@ -122,6 +122,7 @@ class PDBBind(Dataset):
             return copy.deepcopy(self.complex_graphs[idx])
 
     def preprocessing(self):
+        print("In preprocessing to generate cache table.")
         print(f'Processing complexes from [{self.split_path}] and saving it to [{self.full_cache_path}]')
 
         complex_names_all = read_strings_from_txt(self.split_path)
@@ -131,6 +132,7 @@ class PDBBind(Dataset):
 
         if self.esm_embeddings_path is not None:
             id_to_embeddings = torch.load(self.esm_embeddings_path)
+            print("Loaded embeddings from file.")
             chain_embeddings_dictlist = defaultdict(list)
             for key, embedding in id_to_embeddings.items():
                 key_name = key.split('_')[0]
@@ -141,11 +143,14 @@ class PDBBind(Dataset):
                 lm_embeddings_chains_all.append(chain_embeddings_dictlist[name])
         else:
             lm_embeddings_chains_all = [None] * len(complex_names_all)
+        print("Done loading embeddings.")
 
         if self.num_workers > 1:
+            print(f"Using {self.num_workers} workers")
             # running preprocessing in parallel on multiple workers and saving the progress every 1000 complexes
             for i in range(len(complex_names_all)//1000+1):
-                if os.path.exists(os.path.join(self.full_cache_path, f"heterographs{i}.pkl")):
+                if os.path.exists(os.path.join(self.full_cache_path, f"heterographs{i}.pkl")) and os.path.exists(os.path.join(self.full_cache_path, f"rdkit_ligands{i}.pkl")):
+                    print(f"File heterographs{i}.pkl already exists", os.path.join(self.full_cache_path, f"heterographs{i}.pkl"))
                     continue
                 complex_names = complex_names_all[1000*i:1000*(i+1)]
                 lm_embeddings_chains = lm_embeddings_chains_all[1000*i:1000*(i+1)]
@@ -379,6 +384,7 @@ def print_statistics(complex_graphs):
 
 
 def construct_loader(args, t_to_sigma):
+    print("Constructing loader...")
     transform = NoiseTransform(t_to_sigma=t_to_sigma, no_torsion=args.no_torsion,
                                all_atom=args.all_atoms)
 
@@ -390,11 +396,13 @@ def construct_loader(args, t_to_sigma):
                    'num_workers': args.num_workers, 'all_atoms': args.all_atoms,
                    'atom_radius': args.atom_radius, 'atom_max_neighbors': args.atom_max_neighbors,
                    'esm_embeddings_path': args.esm_embeddings_path}
-
+    print("Constructing train dataset...")
     train_dataset = PDBBind(cache_path=args.cache_path, split_path=args.split_train, keep_original=True,
                             num_conformers=args.num_conformers, **common_args)
+    print("Constructing val dataset...")
     val_dataset = PDBBind(cache_path=args.cache_path, split_path=args.split_val, keep_original=True, **common_args)
 
+    print("Constructing train and val loaders..")
     loader_class = DataListLoader if torch.cuda.is_available() else DataLoader
     train_loader = loader_class(dataset=train_dataset, batch_size=args.batch_size, num_workers=args.num_dataloader_workers, shuffle=True, pin_memory=args.pin_memory)
     val_loader = loader_class(dataset=val_dataset, batch_size=args.batch_size, num_workers=args.num_dataloader_workers, shuffle=True, pin_memory=args.pin_memory)
