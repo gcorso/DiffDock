@@ -23,11 +23,13 @@ parser.add_argument('--file_to_exclude', type=str, default=None, help='')
 parser.add_argument('--all_dirs_in_results', action='store_true', default=True, help='Evaluate all directories in the results path instead of using directly looking for the names')
 parser.add_argument('--num_predictions', type=int, default=10, help='')
 parser.add_argument('--no_id_in_filename', action='store_true', default=False, help='')
+parser.add_argument('--test_names_path', type=str, default='data/splits/timesplit_test', help='Path to text file with the folder names in the test set')
+parser.add_argument('--no_overlap_names_path', type=str, default='data/splits/timesplit_test_no_rec_overlap', help='Path text file with the folder names in the test set that have no receptor overlap with the train set')
 args = parser.parse_args()
 
 print('Reading paths and names.')
-names = read_strings_from_txt(f'data/splits/timesplit_test')
-names_no_rec_overlap = read_strings_from_txt(f'data/splits/timesplit_test_no_rec_overlap')
+names = read_strings_from_txt(args.test_names_path)
+names_no_rec_overlap = read_strings_from_txt(args.no_overlap_names_path)
 results_path_containments = os.listdir(args.results_path)
 
 all_times = []
