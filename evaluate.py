@@ -36,6 +36,7 @@ parser.add_argument('--batch_size', type=int, default=10, help='Number of poses 
 parser.add_argument('--cache_path', type=str, default='data/cacheNew', help='Folder from where to load/restore cached dataset')
 parser.add_argument('--data_dir', type=str, default='data/PDBBind_processed/', help='Folder containing original structures')
 parser.add_argument('--split_path', type=str, default='data/splits/timesplit_no_lig_overlap_val', help='Path of file defining the split')
+parser.add_argument('--no_overlap_names_path', type=str, default='data/splits/timesplit_test_no_rec_overlap', help='Path text file with the folder names in the test set that have no receptor overlap with the train set')
 parser.add_argument('--no_model', action='store_true', default=False, help='Whether to return seed conformer without running model')
 parser.add_argument('--no_random', action='store_true', default=False, help='Whether to add randomness in diffusion steps')
 parser.add_argument('--no_final_step_noise', action='store_true', default=False, help='Whether to add noise after the final step')
@@ -161,7 +162,7 @@ print('t schedule', tr_schedule)
 rmsds_list, obrmsds, centroid_distances_list, failures, skipped, min_cross_distances_list, base_min_cross_distances_list, confidences_list, names_list = [], [], [], 0, 0, [], [], [], []
 run_times, min_self_distances_list, without_rec_overlap_list = [], [], []
 N = args.samples_per_complex
-names_no_rec_overlap = read_strings_from_txt(f'data/splits/timesplit_test_no_rec_overlap')
+names_no_rec_overlap = read_strings_from_txt(args.no_overlap_names_path)
 print('Size of test dataset: ', len(test_dataset))
 
 for idx, orig_complex_graph in tqdm(enumerate(test_loader)):
