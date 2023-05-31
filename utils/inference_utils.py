@@ -188,7 +188,7 @@ class InferenceDataset(Dataset):
             self.lm_embeddings = []
             for i in range(len(protein_sequences)):
                 s = protein_sequences[i].split(':')
-                self.lm_embeddings.append([lm_embeddings[f'{complex_names[i]}chain{j}'] for j in range(len(s))])
+                self.lm_embeddings.append([lm_embeddings[f'{complex_names[i]}_chain_{j}'] for j in range(len(s))])
 
         elif not lm_embeddings:
             self.lm_embeddings = [None] * len(self.complex_names)
