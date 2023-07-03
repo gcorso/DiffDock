@@ -125,6 +125,7 @@ Now everything is trained and you can run inference with:
 
     python -m evaluate --model_dir workdir/big_score_model --ckpt best_ema_inference_epoch_model.pt --confidence_ckpt best_model_epoch75.pt --confidence_model_dir workdir/confidence_model --run_name DiffDockInference --inference_steps 20 --split_path data/splits/timesplit_test --samples_per_complex 40 --batch_size 10 --actual_steps 18 --no_final_step_noise
 
+Note: the notebook `data/apo_alignment.ipynb` contains the code used to align the ESMFold-generated apo-structures to the holo-structures. 
 
 ## Citation
     @article{corso2023diffdock,
