@@ -39,7 +39,8 @@ This is an example for how to set up a working conda environment to run the code
     conda create --name diffdock python=3.9
     conda activate diffdock
     conda install pytorch==1.11.0 pytorch-cuda=11.7 -c pytorch -c nvidia
-    pip install torch-scatter torch-sparse torch-cluster torch-spline-conv torch-geometric==2.0.4 -f https://data.pyg.org/whl/torch-1.11.0+cu117.html
+    conda install -c conda-forge gcc=9 gxx=9
+    pip install torch-scatter torch-sparse==0.6.14 torch-cluster torch-spline-conv torch-geometric==2.0.4 -f https://data.pyg.org/whl/torch-1.11.0+cu117.html
     python -m pip install PyYAML scipy "networkx[default]" biopython rdkit-pypi e3nn spyrmsd pandas biopandas
 
 Then you need to install ESM that we use both for protein sequence embeddings and for the protein structure prediction in case you only have the sequence of your target. Note that OpenFold (and so ESMFold) requires a GPU. If you don't have a GPU, you can still use DiffDock with existing protein structures.
