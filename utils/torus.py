@@ -36,7 +36,7 @@ else:
     p_ = p(x, sigma[:, None], N=100)
     np.save('.p.npy', p_)
 
-    score_ = grad(x, sigma[:, None], N=100) / p_
+    score_ = grad(x, sigma[:, None], N=100) / (p_ + 1e-5)
     np.save('.score.npy', score_)
 
 
