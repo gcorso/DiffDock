@@ -39,6 +39,14 @@ parser.add_argument('--batch_size', type=int, default=32, help='')
 parser.add_argument('--no_final_step_noise', action='store_true', default=False, help='Use no noise in the final step of the reverse diffusion')
 parser.add_argument('--inference_steps', type=int, default=20, help='Number of denoising steps')
 parser.add_argument('--actual_steps', type=int, default=None, help='Number of denoising steps that are actually performed')
+
+# CONIFER POINT
+parser.add_argument('--keep_hs', type=bool, default=None, help='Keep hydrogens in the results')
+parser.add_argument('--remove_hs_score', type=bool, default=None, help='Force remove_hs for the score model InferenceDataset')
+parser.add_argument('--remove_hs_confidence', type=bool, default=None, help='Force remove_hs for the confidence model InferenceDataset')
+parser.add_argument('--remove_hs_output', type=bool, default=None, help='Force remove_hs for the resulting poses')
+parser.add_argument('--keep_src_3d', type=bool, default=None, help='Force whether or not to drop the 3D coordinates for 3D input')
+
 args = parser.parse_args()
 
 os.makedirs(args.out_dir, exist_ok=True)
@@ -67,14 +75,39 @@ for name in complex_name_list:
     write_dir = f'{args.out_dir}/{name}'
     os.makedirs(write_dir, exist_ok=True)
 
+# CONIFER POINT
+# Defaults
+remove_hs_score = score_model_args.remove_hs
+remove_hs_confidence = confidence_args.remove_hs
+remove_hs_output = score_model_args.remove_hs
+keep_src_3d = True
+
+# General override
+if args.keep_hs:
+    remove_hs_score = False
+    remove_hs_confidence = False
+    remove_hs_output = False
+
+# Individual override
+truish = lambda x: x in ["true", "True", "1"]
+if args.remove_hs_score is not None: remove_hs_score = truish(args.remove_hs_score)
+if args.remove_hs_confidence is not None: remove_hs_confidence = truish(args.remove_hs_confidence)
+if args.remove_hs_output is not None: remove_hs_output = truish(args.remove_hs_output)
+if args.keep_src_3d is not None: keep_src_3d = truish(args.keep_src_3d)
+# DONE CONIFER POINT
+
+import json
+print(f"Special vars: remove_hs_score={json.dumps(remove_hs_score)} remove_hs_confidence={json.dumps(remove_hs_confidence)} remove_hs_output={json.dumps(remove_hs_output)} keep_src_3d={json.dumps(keep_src_3d)}")
 # preprocessing of complexes into geometric graphs
 test_dataset = InferenceDataset(out_dir=args.out_dir, complex_names=complex_name_list, protein_files=protein_path_list,
                                 ligand_descriptions=ligand_description_list, protein_sequences=protein_sequence_list,
                                 lm_embeddings=score_model_args.esm_embeddings_path is not None,
-                                receptor_radius=score_model_args.receptor_radius, remove_hs=score_model_args.remove_hs,
+                                receptor_radius=score_model_args.receptor_radius, remove_hs=remove_hs_score,
                                 c_alpha_max_neighbors=score_model_args.c_alpha_max_neighbors,
                                 all_atoms=score_model_args.all_atoms, atom_radius=score_model_args.atom_radius,
-                                atom_max_neighbors=score_model_args.atom_max_neighbors)
+                                atom_max_neighbors=score_model_args.atom_max_neighbors,
+                                keep_src_3d=keep_src_3d,
+                                )
 test_loader = DataLoader(dataset=test_dataset, batch_size=1, shuffle=False)
 
 if args.confidence_model_dir is not None and not confidence_args.use_original_model_cache:
@@ -84,11 +117,13 @@ if args.confidence_model_dir is not None and not confidence_args.use_original_mo
         InferenceDataset(out_dir=args.out_dir, complex_names=complex_name_list, protein_files=protein_path_list,
                          ligand_descriptions=ligand_description_list, protein_sequences=protein_sequence_list,
                          lm_embeddings=confidence_args.esm_embeddings_path is not None,
-                         receptor_radius=confidence_args.receptor_radius, remove_hs=confidence_args.remove_hs,
+                         receptor_radius=confidence_args.receptor_radius, remove_hs=remove_hs_confidence,
                          c_alpha_max_neighbors=confidence_args.c_alpha_max_neighbors,
                          all_atoms=confidence_args.all_atoms, atom_radius=confidence_args.atom_radius,
                          atom_max_neighbors=confidence_args.atom_max_neighbors,
-                         precomputed_lm_embeddings=test_dataset.lm_embeddings)
+                         precomputed_lm_embeddings=test_dataset.lm_embeddings,
+                         keep_src_3d=keep_src_3d,
+                         )
 else:
     confidence_test_dataset = None
 
@@ -170,7 +205,7 @@ for idx, orig_complex_graph in tqdm(enumerate(test_loader)):
         write_dir = f'{args.out_dir}/{complex_name_list[idx]}'
         for rank, pos in enumerate(ligand_pos):
             mol_pred = copy.deepcopy(lig)
-            if score_model_args.remove_hs: mol_pred = RemoveHs(mol_pred)
+            if remove_hs_output: mol_pred = RemoveHs(mol_pred)
             if rank == 0: write_mol_with_coords(mol_pred, pos, os.path.join(write_dir, f'rank{rank+1}.sdf'))
             write_mol_with_coords(mol_pred, pos, os.path.join(write_dir, f'rank{rank+1}_confidence{confidence[rank]:.2f}.sdf'))
 
