@@ -77,10 +77,11 @@ for name in complex_name_list:
 
 # CONIFER POINT
 # Defaults
+print(args)
 remove_hs_score = score_model_args.remove_hs
 remove_hs_confidence = confidence_args.remove_hs
 remove_hs_output = score_model_args.remove_hs
-keep_src_3d = True
+keep_src_3d = False
 
 # General override
 if args.keep_hs:
@@ -89,7 +90,7 @@ if args.keep_hs:
     remove_hs_output = False
 
 # Individual override
-truish = lambda x: x in ["true", "True", "1"]
+truish = lambda x: x in [True, "true", "True", "1"]
 if args.remove_hs_score is not None: remove_hs_score = truish(args.remove_hs_score)
 if args.remove_hs_confidence is not None: remove_hs_confidence = truish(args.remove_hs_confidence)
 if args.remove_hs_output is not None: remove_hs_output = truish(args.remove_hs_output)
