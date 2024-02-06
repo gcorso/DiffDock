@@ -477,12 +477,14 @@ def get_fullrec_graph(rec, rec_coords, c_alpha_coords, n_coords, c_coords, compl
 
     return
 
-def write_mol_with_coords(mol, new_coords, path):
+def write_mol_with_coords(mol, new_coords, path, add_hs=False):
     w = Chem.SDWriter(path)
     conf = mol.GetConformer()
     for i in range(mol.GetNumAtoms()):
         x,y,z = new_coords.astype(np.double)[i]
         conf.SetAtomPosition(i,Point3D(x,y,z))
+    if add_hs:
+        mol = Chem.AddHs(mol, addCoords=True)
     w.write(mol)
     w.close()
 
