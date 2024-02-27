@@ -65,7 +65,16 @@ def sampling(data_list, model, inference_steps, tr_schedule, rot_schedule, tor_s
                 tr_z = torch.zeros((b, 3)) if no_random or (no_final_step_noise and t_idx == inference_steps - 1) \
                     else torch.normal(mean=0, std=1, size=(b, 3))
                 tr_perturb = (tr_g ** 2 * dt_tr * tr_score.cpu() + tr_g * np.sqrt(dt_tr) * tr_z).cpu()
-
+                ##################################################################################################
+                # Added by @rcrehuet. This patch is needed because tr_score can have very large values which give
+                # distorted geometries that result in numerical errors in modify_conformer_torsion_angles and in
+                # the SVD in rigid_transform_Kabsch_3D_torch
+                while True:
+                    if torch.any(torch.abs(tr_perturb)>9999.):
+                        tr_perturb = torch.where(torch.abs(tr_perturb)>9999.,tr_perturb*0.1 ,tr_perturb)
+                    else: break
+                ##################################################################################################
+                
                 rot_z = torch.zeros((b, 3)) if no_random or (no_final_step_noise and t_idx == inference_steps - 1) \
                     else torch.normal(mean=0, std=1, size=(b, 3))
                 rot_perturb = (rot_score.cpu() * dt_rot * rot_g ** 2 + rot_g * np.sqrt(dt_rot) * rot_z).cpu()
