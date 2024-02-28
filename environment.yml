@@ -1,102 +1,40 @@
 name: diffdock
 channels:
+  - pyg
+  - nvidia
   - pytorch
+  - conda-forge
   - defaults
 dependencies:
-  - blas=1.0
-  - brotlipy=0.7.0
-  - bzip2=1.0.8
-  - ca-certificates=2022.07.19
-  - certifi=2022.9.14
-  - cffi=1.15.1
-  - charset-normalizer=2.0.4
-  - cryptography=37.0.1
-  - ffmpeg=4.3
-  - freetype=2.11.0
-  - gettext=0.21.0
-  - giflib=5.2.1
-  - gmp=6.2.1
-  - gnutls=3.6.15
-  - icu=58.2
-  - idna=3.3
-  - intel-openmp=2021.4.0
-  - jpeg=9e
-  - lame=3.100
-  - lcms2=2.12
-  - lerc=3.0
-  - libcxx=14.0.6
-  - libdeflate=1.8
-  - libffi=3.3
-  - libiconv=1.16
-  - libidn2=2.3.2
-  - libpng=1.6.37
-  - libtasn1=4.16.0
-  - libtiff=4.4.0
-  - libunistring=0.9.10
-  - libwebp=1.2.2
-  - libwebp-base=1.2.2
-  - libxml2=2.9.14
-  - llvm-openmp=14.0.6
-  - lz4-c=1.9.3
-  - mkl=2021.4.0
-  - mkl-service=2.4.0
-  - mkl_fft=1.3.1
-  - mkl_random=1.2.2
-  - ncurses=6.3
-  - nettle=3.7.3
-  - numpy=1.23.1
-  - numpy-base=1.23.1
-  - openh264=2.1.1
-  - openssl=1.1.1q
-  - pillow=9.2.0
-  - pip=22.2.2
-  - pycparser=2.21
-  - pyopenssl=22.0.0
-  - pysocks=1.7.1
-  - python=3.9.13
-  - pytorch=1.12.1
-  - readline=8.1.2
-  - requests=2.28.1
-  - setuptools=63.4.1
-  - six=1.16.0
-  - sqlite=3.39.3
-  - tk=8.6.12
-  - torchaudio=0.12.1
-  - torchvision=0.13.1
-  - typing_extensions=4.3.0
-  - tzdata=2022c
-  - urllib3=1.26.11
-  - wheel=0.37.1
-  - xz=5.2.6
-  - zlib=1.2.12
-  - zstd=1.5.2
+  - python=3.9.18
+  - pip
+  # Need to install torch in order to build openfold, so install it first
   - pip:
-    - biopandas==0.4.1
-    - biopython==1.79
+    - --extra-index-url https://download.pytorch.org/whl/cu117
+    - --find-links https://pytorch-geometric.com/whl/torch-1.13.1+cu117.html
+    - torch==1.13.1+cu117
+  - pip:
+    - --extra-index-url https://download.pytorch.org/whl/cu117
+    - --find-links https://pytorch-geometric.com/whl/torch-1.13.1+cu117.html
+    - dllogger @ git+https://github.com/NVIDIA/dllogger.git
     - e3nn==0.5.0
-    - jinja2==3.1.2
-    - joblib==1.2.0
-    - markupsafe==2.1.1
-    - mpmath==1.2.1
-    - networkx==2.8.7
-    - opt-einsum==3.3.0
-    - opt-einsum-fx==0.1.4
-    - packaging==21.3
-    - pandas==1.5.0
-    - pyaml==21.10.1
-    - pyparsing==3.0.9
-    - python-dateutil==2.8.2
-    - pytz==2022.4
-    - pyyaml==6.0
-    - rdkit-pypi==2022.3.5
-    - scikit-learn==1.1.2
-    - scipy==1.9.1
-    - spyrmsd==0.5.2
-    - sympy==1.11.1
-    - threadpoolctl==3.1.0
-    - torch-cluster==1.6.0
-    - torch-geometric==2.1.0.post1
-    - torch-scatter==2.0.9
-    - torch-sparse==0.6.15
-    - torch-spline-conv==1.2.1
-    - tqdm==4.64.1
+    - fair-esm[esmfold]==2.0.0
+    - networkx==2.8.4
+    - openfold @ git+https://github.com/aqlaboratory/openfold.git@4b41059694619831a7db195b7e0988fc4ff3a307
+    - pandas==1.5.1
+    - prody==2.2.0
+    - prody==2.2.0
+    - pybind11==2.11.1
+    - rdkit==2022.03.3
+    - scikit-learn==1.1.0
+    - scipy==1.12.0
+    - torch==1.13.1+cu117
+    - torch-cluster==1.6.0+pt113cu117
+    - torch-geometric==2.2.0
+    - torch-scatter==2.1.0+pt113cu117
+    - torch-sparse==0.6.16+pt113cu117
+    - torch-spline-conv==1.2.1+pt113cu117
+    - torchmetrics==0.11.0
+  - pip:
+    - gradio==3.50.*
+    - requests

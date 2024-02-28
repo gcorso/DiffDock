@@ -1,0 +1,24 @@
+--extra-index-url https://download.pytorch.org/whl/cu117
+--find-links https://pytorch-geometric.com/whl/torch-1.13.1+cu117.html
+# Note: openfold build may fail if torch not installed first, so it should be installed separately.
+# Here for reference.
+torch==1.13.1+cu117
+dllogger@git+https://github.com/NVIDIA/dllogger.git
+e3nn==0.5.0
+fair-esm[esmfold]==2.0.0
+networkx==2.8.4
+openfold@git+https://github.com/aqlaboratory/openfold.git@4b41059694619831a7db195b7e0988fc4ff3a307
+pandas==1.5.1
+prody==2.2.0
+prody==2.2.0
+pybind11==2.11.1
+rdkit==2022.03.3
+scikit-learn==1.1.0
+scipy==1.12.0
+torch==1.13.1+cu117
+torch-cluster==1.6.0+pt113cu117
+torch-geometric==2.2.0
+torch-scatter==2.1.0+pt113cu117
+torch-sparse==0.6.16+pt113cu117
+torch-spline-conv==1.2.1+pt113cu117
+torchmetrics==0.11.0

@@ -1,4 +1,6 @@
+import copy
 import os
+import pickle
 
 import torch
 from Bio.PDB import PDBParser
@@ -7,37 +9,9 @@ from rdkit.Chem import AddHs, MolFromSmiles
 from torch_geometric.data import Dataset, HeteroData
 import esm
 
-from datasets.process_mols import parse_pdb_from_path, generate_conformer, read_molecule, get_lig_graph_with_matching, \
-    extract_receptor_structure, get_rec_graph
+from datasets.constants import three_to_one
+from datasets.process_mols import generate_conformer, read_molecule, get_lig_graph_with_matching, moad_extract_receptor_structure
 
-
-three_to_one = {'ALA':	'A',
-'ARG':	'R',
-'ASN':	'N',
-'ASP':	'D',
-'CYS':	'C',
-'GLN':	'Q',
-'GLU':	'E',
-'GLY':	'G',
-'HIS':	'H',
-'ILE':	'I',
-'LEU':	'L',
-'LYS':	'K',
-'MET':	'M',
-'MSE':  'M', # MSE this is almost the same AA as MET. The sulfur is just replaced by Selen
-'PHE':	'F',
-'PRO':	'P',
-'PYL':	'O',
-'SER':	'S',
-'SEC':	'U',
-'THR':	'T',
-'TRP':	'W',
-'TYR':	'Y',
-'VAL':	'V',
-'ASX':	'B',
-'GLX':	'Z',
-'XAA':	'X',
-'XLE':	'J'}
 
 def get_sequences_from_pdbfile(file_path):
     biopython_parser = PDBParser()
@@ -153,7 +127,7 @@ def generate_ESM_structure(model, filename, sequence):
 class InferenceDataset(Dataset):
     def __init__(self, out_dir, complex_names, protein_files, ligand_descriptions, protein_sequences, lm_embeddings,
                  receptor_radius=30, c_alpha_max_neighbors=None, precomputed_lm_embeddings=None,
-                 remove_hs=False, all_atoms=False, atom_radius=5, atom_max_neighbors=None):
+                 remove_hs=False, all_atoms=False, atom_radius=5, atom_max_neighbors=None, knn_only_graph=False):
 
         super(InferenceDataset, self).__init__()
         self.receptor_radius = receptor_radius
@@ -161,6 +135,7 @@ class InferenceDataset(Dataset):
         self.remove_hs = remove_hs
         self.all_atoms = all_atoms
         self.atom_radius, self.atom_max_neighbors = atom_radius, atom_max_neighbors
+        self.knn_only_graph = knn_only_graph
 
         self.complex_names = complex_names
         self.protein_files = protein_files
@@ -242,18 +217,19 @@ class InferenceDataset(Dataset):
 
         try:
             # parse the receptor from the pdb file
-            rec_model = parse_pdb_from_path(protein_file)
             get_lig_graph_with_matching(mol, complex_graph, popsize=None, maxiter=None, matching=False, keep_original=False,
                                         num_conformers=1, remove_hs=self.remove_hs)
-            rec, rec_coords, c_alpha_coords, n_coords, c_coords, lm_embeddings = extract_receptor_structure(rec_model, mol, lm_embedding_chains=lm_embedding)
-            if lm_embeddings is not None and len(c_alpha_coords) != len(lm_embeddings):
-                print(f'LM embeddings for complex {name} did not have the right length for the protein. Skipping {name}.')
-                complex_graph['success'] = False
-                return complex_graph
 
-            get_rec_graph(rec, rec_coords, c_alpha_coords, n_coords, c_coords, complex_graph, rec_radius=self.receptor_radius,
-                          c_alpha_max_neighbors=self.c_alpha_max_neighbors, all_atoms=self.all_atoms,
-                          atom_radius=self.atom_radius, atom_max_neighbors=self.atom_max_neighbors, remove_hs=self.remove_hs, lm_embeddings=lm_embeddings)
+            moad_extract_receptor_structure(
+                path=os.path.join(protein_file),
+                complex_graph=complex_graph,
+                neighbor_cutoff=self.receptor_radius,
+                max_neighbors=self.c_alpha_max_neighbors,
+                lm_embeddings=lm_embedding,
+                knn_only_graph=self.knn_only_graph,
+                all_atoms=self.all_atoms,
+                atom_cutoff=self.atom_radius,
+                atom_max_neighbors=self.atom_max_neighbors)
 
         except Exception as e:
             print(f'Skipping {name} because of the error:')
