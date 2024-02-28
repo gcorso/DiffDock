@@ -1,13 +1,13 @@
 import copy
 import os
 import torch
-from argparse import ArgumentParser, Namespace
-from rdkit.Chem import RemoveHs
+from argparse import ArgumentParser, Namespace, FileType
 from functools import partial
 import numpy as np
 import pandas as pd
 from rdkit import RDLogger
 from torch_geometric.loader import DataLoader
+from rdkit.Chem import RemoveAllHs
 
 from datasets.process_mols import write_mol_with_coords
 from utils.diffusion_utils import t_to_sigma as t_to_sigma_compl, get_t_schedule
@@ -20,7 +20,8 @@ from tqdm import tqdm
 RDLogger.DisableLog('rdApp.*')
 import yaml
 parser = ArgumentParser()
-parser.add_argument('--protein_ligand_csv', type=str, default=None, help='Path to a .csv file specifying the input as described in the README. If this is not None, it will be used instead of the --protein_path, --protein_sequence and --ligand parameters')
+parser.add_argument('--config', type=FileType(mode='r'), default='inference_args.yaml')
+parser.add_argument('--protein_ligand_csv', type=str, default="data/protein_ligand_example_csv.csv", help='Path to a .csv file specifying the input as described in the README. If this is not None, it will be used instead of the --protein_path, --protein_sequence and --ligand parameters')
 parser.add_argument('--complex_name', type=str, default='1a0q', help='Name that the complex will be saved with')
 parser.add_argument('--protein_path', type=str, default=None, help='Path to the protein file')
 parser.add_argument('--protein_sequence', type=str, default=None, help='Sequence of the protein for ESMFold, this is ignored if --protein_path is not None')
@@ -30,16 +31,50 @@ parser.add_argument('--out_dir', type=str, default='results/user_inference', hel
 parser.add_argument('--save_visualisation', action='store_true', default=False, help='Save a pdb file with all of the steps of the reverse diffusion')
 parser.add_argument('--samples_per_complex', type=int, default=10, help='Number of samples to generate')
 
-parser.add_argument('--model_dir', type=str, default='workdir/paper_score_model', help='Path to folder with trained score model and hyperparameters')
+parser.add_argument('--model_dir', type=str, default=None, help='Path to folder with trained score model and hyperparameters')
 parser.add_argument('--ckpt', type=str, default='best_ema_inference_epoch_model.pt', help='Checkpoint to use for the score model')
-parser.add_argument('--confidence_model_dir', type=str, default='workdir/paper_confidence_model', help='Path to folder with trained confidence model and hyperparameters')
-parser.add_argument('--confidence_ckpt', type=str, default='best_model_epoch75.pt', help='Checkpoint to use for the confidence model')
+parser.add_argument('--confidence_model_dir', type=str, default=None, help='Path to folder with trained confidence model and hyperparameters')
+parser.add_argument('--confidence_ckpt', type=str, default='best_model.pt', help='Checkpoint to use for the confidence model')
 
-parser.add_argument('--batch_size', type=int, default=32, help='')
-parser.add_argument('--no_final_step_noise', action='store_true', default=False, help='Use no noise in the final step of the reverse diffusion')
+parser.add_argument('--batch_size', type=int, default=10, help='')
+parser.add_argument('--no_final_step_noise', action='store_true', default=True, help='Use no noise in the final step of the reverse diffusion')
 parser.add_argument('--inference_steps', type=int, default=20, help='Number of denoising steps')
 parser.add_argument('--actual_steps', type=int, default=None, help='Number of denoising steps that are actually performed')
+
+parser.add_argument('--old_score_model', action='store_true', default=False, help='')
+parser.add_argument('--old_confidence_model', action='store_true', default=True, help='')
+parser.add_argument('--initial_noise_std_proportion', type=float, default=-1.0, help='Initial noise std proportion')
+parser.add_argument('--choose_residue', action='store_true', default=False, help='')
+
+parser.add_argument('--temp_sampling_tr', type=float, default=1.0)
+parser.add_argument('--temp_psi_tr', type=float, default=0.0)
+parser.add_argument('--temp_sigma_data_tr', type=float, default=0.5)
+parser.add_argument('--temp_sampling_rot', type=float, default=1.0)
+parser.add_argument('--temp_psi_rot', type=float, default=0.0)
+parser.add_argument('--temp_sigma_data_rot', type=float, default=0.5)
+parser.add_argument('--temp_sampling_tor', type=float, default=1.0)
+parser.add_argument('--temp_psi_tor', type=float, default=0.0)
+parser.add_argument('--temp_sigma_data_tor', type=float, default=0.5)
+
+parser.add_argument('--gnina_minimize', action='store_true', default=False, help='')
+parser.add_argument('--gnina_path', type=str, default='gnina', help='')
+parser.add_argument('--gnina_log_file', type=str, default='gnina_log.txt', help='')  # To redirect gnina subprocesses stdouts from the terminal window
+parser.add_argument('--gnina_full_dock', action='store_true', default=False, help='')
+parser.add_argument('--gnina_autobox_add', type=float, default=4.0)
+parser.add_argument('--gnina_poses_to_optimize', type=int, default=1)
+
 args = parser.parse_args()
+
+if args.config:
+    config_dict = yaml.load(args.config, Loader=yaml.FullLoader)
+    arg_dict = args.__dict__
+    for key, value in config_dict.items():
+        if isinstance(value, list):
+            for v in value:
+                arg_dict[key].append(v)
+        else:
+            arg_dict[key] = value
+# TODO check that the args are actually updated
 
 os.makedirs(args.out_dir, exist_ok=True)
 with open(f'{args.model_dir}/model_parameters.yml') as f:
@@ -70,11 +105,12 @@ for name in complex_name_list:
 # preprocessing of complexes into geometric graphs
 test_dataset = InferenceDataset(out_dir=args.out_dir, complex_names=complex_name_list, protein_files=protein_path_list,
                                 ligand_descriptions=ligand_description_list, protein_sequences=protein_sequence_list,
-                                lm_embeddings=score_model_args.esm_embeddings_path is not None,
+                                lm_embeddings=True,
                                 receptor_radius=score_model_args.receptor_radius, remove_hs=score_model_args.remove_hs,
                                 c_alpha_max_neighbors=score_model_args.c_alpha_max_neighbors,
                                 all_atoms=score_model_args.all_atoms, atom_radius=score_model_args.atom_radius,
-                                atom_max_neighbors=score_model_args.atom_max_neighbors)
+                                atom_max_neighbors=score_model_args.atom_max_neighbors,
+                               knn_only_graph=False if not hasattr(score_model_args, 'not_knn_only_graph') else not score_model_args.not_knn_only_graph)
 test_loader = DataLoader(dataset=test_dataset, batch_size=1, shuffle=False)
 
 if args.confidence_model_dir is not None and not confidence_args.use_original_model_cache:
@@ -83,25 +119,27 @@ if args.confidence_model_dir is not None and not confidence_args.use_original_mo
     confidence_test_dataset = \
         InferenceDataset(out_dir=args.out_dir, complex_names=complex_name_list, protein_files=protein_path_list,
                          ligand_descriptions=ligand_description_list, protein_sequences=protein_sequence_list,
-                         lm_embeddings=confidence_args.esm_embeddings_path is not None,
+                         lm_embeddings=True,
                          receptor_radius=confidence_args.receptor_radius, remove_hs=confidence_args.remove_hs,
                          c_alpha_max_neighbors=confidence_args.c_alpha_max_neighbors,
                          all_atoms=confidence_args.all_atoms, atom_radius=confidence_args.atom_radius,
                          atom_max_neighbors=confidence_args.atom_max_neighbors,
-                         precomputed_lm_embeddings=test_dataset.lm_embeddings)
+                         precomputed_lm_embeddings=test_dataset.lm_embeddings,
+                         knn_only_graph=False if not hasattr(score_model_args, 'not_knn_only_graph') else not score_model_args.not_knn_only_graph)
 else:
     confidence_test_dataset = None
 
 t_to_sigma = partial(t_to_sigma_compl, args=score_model_args)
 
-model = get_model(score_model_args, device, t_to_sigma=t_to_sigma, no_parallel=True)
+model = get_model(score_model_args, device, t_to_sigma=t_to_sigma, no_parallel=True, old=args.old_score_model)
 state_dict = torch.load(f'{args.model_dir}/{args.ckpt}', map_location=torch.device('cpu'))
 model.load_state_dict(state_dict, strict=True)
 model = model.to(device)
 model.eval()
 
 if args.confidence_model_dir is not None:
-    confidence_model = get_model(confidence_args, device, t_to_sigma=t_to_sigma, no_parallel=True, confidence_mode=True)
+    confidence_model = get_model(confidence_args, device, t_to_sigma=t_to_sigma, no_parallel=True,
+                                 confidence_mode=True, old=args.old_confidence_model)
     state_dict = torch.load(f'{args.confidence_model_dir}/{args.confidence_ckpt}', map_location=torch.device('cpu'))
     confidence_model.load_state_dict(state_dict, strict=True)
     confidence_model = confidence_model.to(device)
@@ -110,7 +148,7 @@ else:
     confidence_model = None
     confidence_args = None
 
-tr_schedule = get_t_schedule(inference_steps=args.inference_steps)
+tr_schedule = get_t_schedule(inference_steps=args.inference_steps, sigma_schedule='expbeta')
 
 failures, skipped = 0, 0
 N = args.samples_per_complex
@@ -131,7 +169,10 @@ for idx, orig_complex_graph in tqdm(enumerate(test_loader)):
         else:
             confidence_data_list = None
         data_list = [copy.deepcopy(orig_complex_graph) for _ in range(N)]
-        randomize_position(data_list, score_model_args.no_torsion, False, score_model_args.tr_sigma_max)
+        randomize_position(data_list, score_model_args.no_torsion, False, score_model_args.tr_sigma_max,
+                           initial_noise_std_proportion=args.initial_noise_std_proportion,
+                           choose_residue=args.choose_residue)
+
         lig = orig_complex_graph.mol[0]
 
         # initialize visualisation
@@ -154,7 +195,13 @@ for idx, orig_complex_graph in tqdm(enumerate(test_loader)):
                                          device=device, t_to_sigma=t_to_sigma, model_args=score_model_args,
                                          visualization_list=visualization_list, confidence_model=confidence_model,
                                          confidence_data_list=confidence_data_list, confidence_model_args=confidence_args,
-                                         batch_size=args.batch_size, no_final_step_noise=args.no_final_step_noise)
+                                         batch_size=args.batch_size, no_final_step_noise=args.no_final_step_noise,
+                                         temp_sampling=[args.temp_sampling_tr, args.temp_sampling_rot,
+                                                        args.temp_sampling_tor],
+                                         temp_psi=[args.temp_psi_tr, args.temp_psi_rot, args.temp_psi_tor],
+                                         temp_sigma_data=[args.temp_sigma_data_tr, args.temp_sigma_data_rot,
+                                                          args.temp_sigma_data_tor])
+
         ligand_pos = np.asarray([complex_graph['ligand'].pos.cpu().numpy() + orig_complex_graph.original_center.cpu().numpy() for complex_graph in data_list])
 
         # reorder predictions based on confidence output
@@ -170,7 +217,7 @@ for idx, orig_complex_graph in tqdm(enumerate(test_loader)):
         write_dir = f'{args.out_dir}/{complex_name_list[idx]}'
         for rank, pos in enumerate(ligand_pos):
             mol_pred = copy.deepcopy(lig)
-            if score_model_args.remove_hs: mol_pred = RemoveHs(mol_pred)
+            if score_model_args.remove_hs: mol_pred = RemoveAllHs(mol_pred)
             if rank == 0: write_mol_with_coords(mol_pred, pos, os.path.join(write_dir, f'rank{rank+1}.sdf'))
             write_mol_with_coords(mol_pred, pos, os.path.join(write_dir, f'rank{rank+1}_confidence{confidence[rank]:.2f}.sdf'))
 
@@ -190,5 +237,3 @@ for idx, orig_complex_graph in tqdm(enumerate(test_loader)):
 print(f'Failed for {failures} complexes')
 print(f'Skipped {skipped} complexes')
 print(f'Results are in {args.out_dir}')
-
-

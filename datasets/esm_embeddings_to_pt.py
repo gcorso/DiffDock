@@ -1,4 +1,3 @@
-
 import os
 from argparse import ArgumentParser
 
@@ -7,8 +6,8 @@ from tqdm import tqdm
 
 
 parser = ArgumentParser()
-parser.add_argument('--esm_embeddings_path', type=str, default='data/embeddings_output', help='')
-parser.add_argument('--output_path', type=str, default='data/esm2_3billion_embeddings.pt', help='')
+parser.add_argument('--esm_embeddings_path', type=str, default='data/BindingMOAD_2020_ab_processed_biounit/moad_sequences_new', help='')
+parser.add_argument('--output_path', type=str, default='data/BindingMOAD_2020_ab_processed_biounit/moad_sequences_new.pt', help='')
 args = parser.parse_args()
 
 dict = {}

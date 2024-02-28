@@ -1,102 +1,201 @@
 name: diffdock
 channels:
-  - pytorch
+  - conda-forge
   - defaults
 dependencies:
   - blas=1.0
-  - brotlipy=0.7.0
+  - boost=1.74.0
+  - boost-cpp=1.74.0
+  - brotli=1.0.9
+  - brotli-bin=1.0.9
   - bzip2=1.0.8
-  - ca-certificates=2022.07.19
-  - certifi=2022.9.14
-  - cffi=1.15.1
-  - charset-normalizer=2.0.4
-  - cryptography=37.0.1
-  - ffmpeg=4.3
-  - freetype=2.11.0
-  - gettext=0.21.0
+  - ca-certificates=2022.6.15
+  - cairo=1.16.0
+  - certifi=2022.6.15
+  - cycler=0.11.0
+  - expat=2.4.8
+  - font-ttf-dejavu-sans-mono=2.37
+  - font-ttf-inconsolata=3.000
+  - font-ttf-source-code-pro=2.038
+  - font-ttf-ubuntu=0.83
+  - fontconfig=2.14.0
+  - fonts-conda-ecosystem=1
+  - fonts-conda-forge=1
+  - fonttools=4.33.3
+  - freetype=2.10.4
+  - gettext=0.19.8.1
   - giflib=5.2.1
-  - gmp=6.2.1
-  - gnutls=3.6.15
-  - icu=58.2
-  - idna=3.3
-  - intel-openmp=2021.4.0
+  - greenlet=1.1.2
+  - icu=70.1
   - jpeg=9e
-  - lame=3.100
+  - kiwisolver=1.4.3
   - lcms2=2.12
   - lerc=3.0
+  - libblas=3.9.0
+  - libbrotlicommon=1.0.9
+  - libbrotlidec=1.0.9
+  - libbrotlienc=1.0.9
+  - libcblas=3.9.0
   - libcxx=14.0.6
-  - libdeflate=1.8
-  - libffi=3.3
+  - libdeflate=1.12
+  - libffi=3.4.2
+  - libgfortran=5.0.0
+  - libgfortran5=9.3.0
+  - libglib=2.70.2
   - libiconv=1.16
-  - libidn2=2.3.2
+  - liblapack=3.9.0
+  - libopenblas=0.3.20
   - libpng=1.6.37
-  - libtasn1=4.16.0
   - libtiff=4.4.0
-  - libunistring=0.9.10
   - libwebp=1.2.2
   - libwebp-base=1.2.2
+  - libxcb=1.13
   - libxml2=2.9.14
-  - llvm-openmp=14.0.6
+  - libzlib=1.2.12
+  - llvm-openmp=14.0.4
   - lz4-c=1.9.3
-  - mkl=2021.4.0
-  - mkl-service=2.4.0
-  - mkl_fft=1.3.1
-  - mkl_random=1.2.2
+  - matplotlib=3.5.2
+  - matplotlib-base=3.5.2
+  - munkres=1.1.4
   - ncurses=6.3
-  - nettle=3.7.3
-  - numpy=1.23.1
-  - numpy-base=1.23.1
-  - openh264=2.1.1
-  - openssl=1.1.1q
-  - pillow=9.2.0
-  - pip=22.2.2
-  - pycparser=2.21
-  - pyopenssl=22.0.0
-  - pysocks=1.7.1
+  - nomkl=3.0
+  - numpy=1.23.0
+  - openbabel=3.1.1
+  - openjpeg=2.4.0
+  - openssl=3.0.5
+  - packaging=21.3
+  - pandas=1.4.3
+  - pcre=8.45
+  - pillow=9.1.1
+  - pip=22.1.2
+  - pixman=0.40.0
+  - pthread-stubs=0.4
+  - pyaml=21.10.1
+  - pycairo=1.21.0
+  - pyparsing=3.0.9
   - python=3.9.13
-  - pytorch=1.12.1
+  - python-dateutil=2.8.2
+  - python_abi=3.9
+  - pytz=2022.1
+  - pyyaml=6.0
+  - rdkit=2022.03.3
   - readline=8.1.2
-  - requests=2.28.1
-  - setuptools=63.4.1
+  - setuptools=62.6.0
   - six=1.16.0
-  - sqlite=3.39.3
+  - spyrmsd=0.5.2
+  - sqlalchemy=1.4.39
+  - sqlite=3.39.0
   - tk=8.6.12
-  - torchaudio=0.12.1
-  - torchvision=0.13.1
-  - typing_extensions=4.3.0
-  - tzdata=2022c
-  - urllib3=1.26.11
+  - tornado=6.1
+  - tzdata=2022a
+  - unicodedata2=14.0.0
   - wheel=0.37.1
-  - xz=5.2.6
+  - xorg-libxau=1.0.9
+  - xorg-libxdmcp=1.1.3
+  - xz=5.2.5
+  - yaml=0.2.5
   - zlib=1.2.12
   - zstd=1.5.2
   - pip:
+    - appnope==0.1.3
+    - argon2-cffi==21.3.0
+    - argon2-cffi-bindings==21.2.0
+    - asttokens==2.0.5
+    - attrs==21.4.0
+    - backcall==0.2.0
+    - beautifulsoup4==4.11.1
     - biopandas==0.4.1
     - biopython==1.79
+    - bleach==5.0.1
+    - cffi==1.15.1
+    - charset-normalizer==2.1.0
+    - click==8.1.3
+    - debugpy==1.6.2
+    - decorator==5.1.1
+    - defusedxml==0.7.1
+    - docker-pycreds==0.4.0
     - e3nn==0.5.0
+    - entrypoints==0.4
+    - executing==0.8.3
+    - fastjsonschema==2.15.3
+    - gitdb==4.0.9
+    - gitpython==3.1.27
+    - h5py==3.7.0
+    - idna==3.3
+    - ipykernel==6.15.1
+    - ipython==8.4.0
+    - ipython-genutils==0.2.0
+    - ipywidgets==7.7.1
+    - jedi==0.18.1
     - jinja2==3.1.2
-    - joblib==1.2.0
+    - joblib==1.1.0
+    - jsonschema==4.7.1
+    - jupyter==1.0.0
+    - jupyter-client==7.3.4
+    - jupyter-console==6.4.4
+    - jupyter-core==4.11.1
+    - jupyterlab-pygments==0.2.2
+    - jupyterlab-widgets==1.1.1
+    - kaleido==0.2.1
     - markupsafe==2.1.1
+    - matplotlib-inline==0.1.3
+    - mistune==0.8.4
     - mpmath==1.2.1
-    - networkx==2.8.7
+    - nbclient==0.6.6
+    - nbconvert==6.5.0
+    - nbformat==5.4.0
+    - nest-asyncio==1.5.5
+    - networkx==2.8.4
+    - notebook==6.4.12
     - opt-einsum==3.3.0
     - opt-einsum-fx==0.1.4
-    - packaging==21.3
-    - pandas==1.5.0
-    - pyaml==21.10.1
-    - pyparsing==3.0.9
-    - python-dateutil==2.8.2
-    - pytz==2022.4
-    - pyyaml==6.0
-    - rdkit-pypi==2022.3.5
-    - scikit-learn==1.1.2
-    - scipy==1.9.1
-    - spyrmsd==0.5.2
-    - sympy==1.11.1
+    - pandocfilters==1.5.0
+    - parso==0.8.3
+    - pathtools==0.1.2
+    - pexpect==4.8.0
+    - pickleshare==0.7.5
+    - plotly==5.9.0
+    - prometheus-client==0.14.1
+    - promise==2.3
+    - prompt-toolkit==3.0.30
+    - protobuf==3.20.1
+    - psutil==5.9.1
+    - ptyprocess==0.7.0
+    - pure-eval==0.2.2
+    - pycparser==2.21
+    - pygments==2.12.0
+    - pyrsistent==0.18.1
+    - pyzmq==23.2.0
+    - qtconsole==5.3.1
+    - qtpy==2.1.0
+    - requests==2.28.1
+    - scikit-learn==1.1.1
+    - scipy==1.8.1
+    - send2trash==1.8.0
+    - sentry-sdk==1.6.0
+    - setproctitle==1.2.3
+    - shortuuid==1.0.9
+    - smmap==5.0.0
+    - soupsieve==2.3.2.post1
+    - stack-data==0.3.0
+    - sympy==1.10.1
+    - tenacity==8.0.1
+    - terminado==0.15.0
     - threadpoolctl==3.1.0
+    - tinycss2==1.1.1
+    - torch==1.11.0
     - torch-cluster==1.6.0
-    - torch-geometric==2.1.0.post1
+    - torch-geometric==2.0.4
     - torch-scatter==2.0.9
-    - torch-sparse==0.6.15
+    - torch-sparse==0.6.14
     - torch-spline-conv==1.2.1
-    - tqdm==4.64.1
+    - torchaudio==0.11.0
+    - torchvision==0.12.0
+    - tqdm==4.64.0
+    - traitlets==5.3.0
+    - typing-extensions==4.3.0
+    - urllib3==1.26.9
+    - wandb==0.12.20
+    - wcwidth==0.2.5
+    - webencodings==0.5.1
+    - widgetsnbextension==3.6.1
