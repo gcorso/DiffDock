@@ -11,7 +11,7 @@ USER $APPUSER
 WORKDIR $HOME
 
 ENV ENV_NAME="diffdock"
-ENV DIR_NAME="ligbind"
+ENV DIR_NAME="DiffDock"
 
 # Install micromamba
 RUN curl -Ls https://micro.mamba.pm/api/micromamba/linux-64/latest | tar -xj bin/micromamba
@@ -23,7 +23,7 @@ COPY --chown=$APPUSER:$APPUSER ./$ENV_FILE_NAME .
 RUN ~/bin/micromamba env create --file $ENV_FILE_NAME && ~/bin/micromamba clean -afy --quiet
 
 # Copy application code
-COPY --chown=$APPUSER:$APPUSER cuda-ubuntu22.04 $HOME/$DIR_NAME
+COPY --chown=$APPUSER:$APPUSER . $HOME/$DIR_NAME
 
 # Download models
 # These should download automatically on first inference
@@ -43,7 +43,7 @@ USER $APPUSER
 WORKDIR $HOME
 
 ENV ENV_NAME="diffdock"
-ENV DIR_NAME="ligbind"
+ENV DIR_NAME="DiffDock"
 
 # Copy the Conda environment and application code from the builder stage
 COPY --from=builder --chown=$APPUSER:$APPUSER $HOME/micromamba $HOME/micromamba
