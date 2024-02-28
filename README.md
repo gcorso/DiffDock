@@ -67,6 +67,15 @@ You can directly try out the model without the need of installing anything throu
 
 ### Setup Environment  <a name="environment"></a>
 
+We will set up the environment using [Anaconda](https://docs.anaconda.com/anaconda/install/index.html). Clone the
+current repo
+
+    git clone https://github.com/gcorso/DiffDock.git
+
+To set up an appropriate environment, navigate to the root of the repository and run the following commands:
+
+    conda create --file environment.yml
+    conda activate diffdock
 
 ### Docking Prediction  <a name="inference"></a>
 
@@ -83,6 +92,14 @@ And you are ready to run inference:
     python -m inference --config inference_args.yaml  --protein_ligand_csv data/protein_ligand_example_csv.csv --out_dir results/user_predictions_small 
 
 When providing the `.pdb` files you can run DiffDock also on CPU, however, if possible, we recommend using a GPU as the model runs significantly faster. Note that the first time you run DiffDock on a device the program will precompute and store in cache look-up tables for SO(2) and SO(3) distributions (typically takes a couple of minutes), this won't be repeated in following runs.  
+
+## Graphical UI  <a name="gui"></a>
+
+We provide a simple graphical user interface to run DiffDock on a single complex. To use it, run the following command:
+
+    python app/main.py
+
+and navigate to http://localhost:7860 in your browser. 
 
 
 ## FAQ  <a name="faq"></a>

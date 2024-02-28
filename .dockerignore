@@ -1,20 +1,27 @@
-homework
-inference_out_dir_not_specified
-.plotly_cache
+# Ignore hidden files and folders
+**/.*
 .DS_store
-renew.sh
-tmux_renew.sh
-images
+
+# Ignore git directories (redundant)
+.git
+.gitattributes
+
+# Ignore generated user results
+results/*
 tmp/
+
+# Ignore trained models
+workdir/*
+
+# Do not include PDBBind files
+# (quite likely they are in the same directory)
+**/pdbbind_sequences.fasta
+**/PDBBind_processed/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
 *$py.class
-
-# C extensions
-*.so
-.so3_*
 
 # Distribution / packaging
 .Python
@@ -119,50 +126,3 @@ local_config_inference2.yml
 *.zip
 
 .idea/
-
-
-#################### Project specific
-.p.npy
-.score.npy
-# this ignores everything in data except for the file
-!/data
-/data/*
-!/data/splits
-!/data/protein_ligand_example_csv.csv
-!/data/testset_csv.csv
-!/data/INDEX_general_PL_data.2020
-test_run
-artifacts
-cache
-wandb
-logs
-
-# temporary files
-.openbabel_cache
-temp/
-bsub*
-stderr*
-stdout*
-!/workdir
-/workdir/*
-!/workdir/paper_confidence_model
-!/workdir/paper_score_model
-runs2
-results
-# this excludes everything in the runs directory except for that specific run
-!/runs
-/runs/*
-!/runs/rigid_redocking
-!/runs/flexible_self_docking
-local_config.yml
-local_config_inference.yml
-local_config_filtering.yml
-temp1.py
-temp5.py
-temp3.py
-temp4.py
-temp5.py
-temp6.py
-temp7.py
-esm
-
