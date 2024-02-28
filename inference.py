@@ -10,6 +10,7 @@ from torch_geometric.loader import DataLoader
 from rdkit.Chem import RemoveAllHs
 
 from datasets.process_mols import write_mol_with_coords
+from utils.download import download_and_extract
 from utils.diffusion_utils import t_to_sigma as t_to_sigma_compl, get_t_schedule
 from utils.inference_utils import InferenceDataset, set_nones
 from utils.sampling import randomize_position, sampling
@@ -20,9 +21,9 @@ from tqdm import tqdm
 RDLogger.DisableLog('rdApp.*')
 import yaml
 parser = ArgumentParser()
-parser.add_argument('--config', type=FileType(mode='r'), default='inference_args.yaml')
-parser.add_argument('--protein_ligand_csv', type=str, default="data/protein_ligand_example_csv.csv", help='Path to a .csv file specifying the input as described in the README. If this is not None, it will be used instead of the --protein_path, --protein_sequence and --ligand parameters')
-parser.add_argument('--complex_name', type=str, default='1a0q', help='Name that the complex will be saved with')
+parser.add_argument('--config', type=FileType(mode='r'), default='default_inference_args.yaml')
+parser.add_argument('--protein_ligand_csv', type=str, default=None, help='Path to a .csv file specifying the input as described in the README. If this is not None, it will be used instead of the --protein_path, --protein_sequence and --ligand parameters')
+parser.add_argument('--complex_name', type=str, default=None, help='Name that the complex will be saved with')
 parser.add_argument('--protein_path', type=str, default=None, help='Path to the protein file')
 parser.add_argument('--protein_sequence', type=str, default=None, help='Sequence of the protein for ESMFold, this is ignored if --protein_path is not None')
 parser.add_argument('--ligand_description', type=str, default='CCCCC(NC(=O)CCC(=O)O)P(=O)(O)OC1=CC=CC=C1', help='Either a SMILES string or the path to a molecule file that rdkit can read')
@@ -65,6 +66,8 @@ parser.add_argument('--gnina_poses_to_optimize', type=int, default=1)
 
 args = parser.parse_args()
 
+REPOSITORY_URL = os.environ.get("REPOSITORY_URL", "https://github.com/gcorso/DiffDock")
+
 if args.config:
     config_dict = yaml.load(args.config, Loader=yaml.FullLoader)
     arg_dict = args.__dict__
@@ -74,7 +77,28 @@ if args.config:
                 arg_dict[key].append(v)
         else:
             arg_dict[key] = value
-# TODO check that the args are actually updated
+
+# Download models if they don't exist locally
+if not os.path.exists(args.model_dir):
+    print(f"Models not found. Downloading")
+    # TODO Remove the dropbox URL once the models are uploaded to GitHub release
+    remote_urls = [f"{REPOSITORY_URL}/releases/latest/download/diffdock_models.zip",
+                   "https://www.dropbox.com/scl/fi/drg90rst8uhd2633tyou0/diffdock_models.zip?rlkey=afzq4kuqor2jb8adah41ro2lz&dl=1"]
+    downloaded_successfully = False
+    for remote_url in remote_urls:
+        try:
+            print(f"Attempting download from {remote_url}")
+            files_downloaded = download_and_extract(remote_url, os.path.dirname(args.model_dir))
+            if not files_downloaded:
+                print(f"Download from {remote_url} failed.")
+                continue
+            print(f"Downloaded and extracted {len(files_downloaded)} files from {remote_url}")
+            downloaded_successfully = True
+        except Exception as e:
+            pass
+
+    if not downloaded_successfully:
+        raise Exception(f"Models not found locally and failed to download them from {remote_urls}")
 
 os.makedirs(args.out_dir, exist_ok=True)
 with open(f'{args.model_dir}/model_parameters.yml') as f:
@@ -84,6 +108,7 @@ if args.confidence_model_dir is not None:
         confidence_args = Namespace(**yaml.full_load(f))
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+print(f"DiffDock will run on {device}")
 
 if args.protein_ligand_csv is not None:
     df = pd.read_csv(args.protein_ligand_csv)
@@ -92,7 +117,7 @@ if args.protein_ligand_csv is not None:
     protein_sequence_list = set_nones(df['protein_sequence'].tolist())
     ligand_description_list = set_nones(df['ligand_description'].tolist())
 else:
-    complex_name_list = [args.complex_name]
+    complex_name_list = [args.complex_name if args.complex_name else f"complex_0"]
     protein_path_list = [args.protein_path]
     protein_sequence_list = [args.protein_sequence]
     ligand_description_list = [args.ligand_description]
@@ -110,7 +135,7 @@ test_dataset = InferenceDataset(out_dir=args.out_dir, complex_names=complex_name
                                 c_alpha_max_neighbors=score_model_args.c_alpha_max_neighbors,
                                 all_atoms=score_model_args.all_atoms, atom_radius=score_model_args.atom_radius,
                                 atom_max_neighbors=score_model_args.atom_max_neighbors,
-                               knn_only_graph=False if not hasattr(score_model_args, 'not_knn_only_graph') else not score_model_args.not_knn_only_graph)
+                                knn_only_graph=False if not hasattr(score_model_args, 'not_knn_only_graph') else not score_model_args.not_knn_only_graph)
 test_loader = DataLoader(dataset=test_dataset, batch_size=1, shuffle=False)
 
 if args.confidence_model_dir is not None and not confidence_args.use_original_model_cache:
