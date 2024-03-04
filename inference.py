@@ -94,6 +94,8 @@ if not os.path.exists(args.model_dir):
                 continue
             print(f"Downloaded and extracted {len(files_downloaded)} files from {remote_url}")
             downloaded_successfully = True
+            # Once we have downloaded the models, we can break the loop
+            break
         except Exception as e:
             pass
 
