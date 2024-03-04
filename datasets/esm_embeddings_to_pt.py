@@ -6,8 +6,8 @@ from tqdm import tqdm
 
 
 parser = ArgumentParser()
-parser.add_argument('--esm_embeddings_path', type=str, default='data/BindingMOAD_2020_ab_processed_biounit/moad_sequences_new', help='')
-parser.add_argument('--output_path', type=str, default='data/BindingMOAD_2020_ab_processed_biounit/moad_sequences_new.pt', help='')
+parser.add_argument('--esm_embeddings_path', type=str, default='data/BindingMOAD_2020_processed/moad_sequences_new', help='')
+parser.add_argument('--output_path', type=str, default='data/BindingMOAD_2020_processed/moad_sequences_new.pt', help='')
 args = parser.parse_args()
 
 dict = {}
