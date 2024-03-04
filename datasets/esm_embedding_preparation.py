@@ -12,7 +12,7 @@ from datasets.constants import three_to_one
 parser = ArgumentParser()
 parser.add_argument('--out_file', type=str, default="data/prepared_for_esm.fasta")
 parser.add_argument('--dataset', type=str, default="pdbbind")
-parser.add_argument('--data_dir', type=str, default='../data/BindingMOAD_2020_ab_processed_biounit/pdb_protein/', help='')
+parser.add_argument('--data_dir', type=str, default='../data/BindingMOAD_2020_processed_biounit/pdb_protein/', help='')
 args = parser.parse_args()
 
 biopython_parser = PDBParser()
