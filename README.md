@@ -89,7 +89,7 @@ An example .csv is at `data/protein_ligand_example_csv.csv` and you would use it
 
 And you are ready to run inference:
 
-    python -m inference --config inference_args.yaml  --protein_ligand_csv data/protein_ligand_example_csv.csv --out_dir results/user_predictions_small 
+    python -m inference --config default_inference_args.yaml  --protein_ligand_csv data/protein_ligand_example_csv.csv --out_dir results/user_predictions_small 
 
 When providing the `.pdb` files you can run DiffDock also on CPU, however, if possible, we recommend using a GPU as the model runs significantly faster. Note that the first time you run DiffDock on a device the program will precompute and store in cache look-up tables for SO(2) and SO(3) distributions (typically takes a couple of minutes), this won't be repeated in following runs.  
 
@@ -165,15 +165,15 @@ Then run the command:
 
 For PDBBind: 
 
-    python -m evaluate  --config inference_args.yaml --split_path data/splits/timesplit_test --split_path data/splits/timesplit_test --batch_size 10 --esm_embeddings_path data/esm2_embeddings.pt --data_dir data/PDBBind_processed/ --tqdm --split test --chain_cutoff 10 --dataset pdbbind
+    python -m evaluate  --config default_inference_args.yaml --split_path data/splits/timesplit_test --split_path data/splits/timesplit_test --batch_size 10 --esm_embeddings_path data/esm2_embeddings.pt --data_dir data/PDBBind_processed/ --tqdm --split test --chain_cutoff 10 --dataset pdbbind
 
 For DockGen:
 
-    python -m evaluate  --config inference_args.yaml --dataset moad --data_dir data/BindingMOAD_2020_processed --unroll_clusters --tqdm --split test --esm_embeddings_path data/moad_esm2_embeddings.pt --min_ligand_size 2 --moad_esm_embeddings_sequences_path data/moad_sequences_to_id.fasta --chain_cutoff 10 --batch_size 10 
+    python -m evaluate  --config default_inference_args.yaml --dataset moad --data_dir data/BindingMOAD_2020_processed --unroll_clusters --tqdm --split test --esm_embeddings_path data/moad_esm2_embeddings.pt --min_ligand_size 2 --moad_esm_embeddings_sequences_path data/moad_sequences_to_id.fasta --chain_cutoff 10 --batch_size 10 
 
 For PoseBusters:
 
-    python -m evaluate  --config inference_args.yaml --data_dir data/posebusters_benchmark_set --tqdm --dataset posebusters --split_path data/splits/posebusters_benchmark_set_ids.txt --esm_embeddings_path data/posebusters_ESM.pt --chain_cutoff 10 --batch_size 10 --protein_file protein --ligand_file ligands 
+    python -m evaluate  --config default_inference_args.yaml --data_dir data/posebusters_benchmark_set --tqdm --dataset posebusters --split_path data/splits/posebusters_benchmark_set_ids.txt --esm_embeddings_path data/posebusters_ESM.pt --chain_cutoff 10 --batch_size 10 --protein_file protein --ligand_file ligands 
 
 To additionally save the .sdf files of the generated molecules, add the flag `--save_visualisation`.
 
