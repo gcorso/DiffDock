@@ -11,7 +11,7 @@ Implementation of DiffDock, state-of-the-art method for molecular docking, by Ga
 This repository contains code and instructions to run the method. 
 If you have any question, feel free to open an issue or reach out to us: [gcorso@mit.edu](gcorso@mit.edu), [hstark@mit.edu](hstark@mit.edu), [bjing@mit.edu](bjing@mit.edu).
 
-**Update February 2024:** We have released DiffDock-L, a new version of DiffDock that provides a significant improvement in performance and generalization capacity (see the description of the new version in [our new paper]()). By default the repository now runs the new model, please use GitHub commit history to run the original DiffDock model. Further we now provide instructions for Docker and to set up your own local UI interface.
+**Update February 2024:** We have released DiffDock-L, a new version of DiffDock that provides a significant improvement in performance and generalization capacity (see the description of the new version in [our new paper](https://arxiv.org/abs/2402.18396)). By default the repository now runs the new model, please use GitHub commit history to run the original DiffDock model. Further we now provide instructions for Docker and to set up your own local UI interface.
 
 You can also try out the model on [Hugging Face Spaces](https://huggingface.co/spaces/reginabarzilaygroup/DiffDock-Web).
 
