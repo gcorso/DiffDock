@@ -32,7 +32,7 @@ class GaussianSmearing(torch.nn.Module):
 
 class AtomEncoder(torch.nn.Module):
     def __init__(self, emb_dim, feature_dims, sigma_embed_dim, lm_embedding_dim=0):
-        # first element of feature_dims tuple is a list with the lenght of each categorical feature and the second is the number of scalar features
+        # first element of feature_dims tuple is a list with the length of each categorical feature and the second is the number of scalar features
         super(AtomEncoder, self).__init__()
         self.atom_embedding_list = torch.nn.ModuleList()
         self.num_categorical_features = len(feature_dims[0])
@@ -59,7 +59,7 @@ class AtomEncoder(torch.nn.Module):
 class OldAtomEncoder(torch.nn.Module):
 
     def __init__(self, emb_dim, feature_dims, sigma_embed_dim, lm_embedding_type= None):
-        # first element of feature_dims tuple is a list with the lenght of each categorical feature and the second is the number of scalar features
+        # first element of feature_dims tuple is a list with the length of each categorical feature and the second is the number of scalar features
         super(OldAtomEncoder, self).__init__()
         self.atom_embedding_list = torch.nn.ModuleList()
         self.num_categorical_features = len(feature_dims[0])
