@@ -125,10 +125,10 @@ local_config_inference2.yml
 .p.npy
 .score.npy
 # this ignores everything in data except for the file
-!/data
 /data/*
+!/data
 !/data/splits
-!/data/protein_ligand_example_csv.csv
+!/data/protein_ligand_example*
 !/data/testset_csv.csv
 !/data/INDEX_general_PL_data.2020
 test_run
