@@ -79,6 +79,66 @@ To set up an appropriate environment, navigate to the root of the repository and
 
 See [conda documentation](https://conda.io/projects/conda/en/latest/commands/env/create.html) for more information.
 
+#### Setup more dependencies to run
+##### Environment CUDA 12.1 and Python 3.9
+After installing following environment.yml, to run inference.py successfully, please install as guide below for CUDA 12.1 (tested).
+1. Check the OS information:
+```
+nvcc -V
+```
+Output must be:
+```
+nvcc: NVIDIA (R) Cuda compiler driver
+Copyright (c) 2005-2023 NVIDIA Corporation
+Built on Tue_Feb__7_19:32:13_PST_2023
+Cuda compilation tools, release 12.1, V12.1.66
+Build cuda_12.1.r12.1/compiler.32415258_0
+```
+And:
+```
+python
+```
+Output must be:
+```
+Python 3.9.18 | packaged by conda-forge | (main, Dec 23 2023, 16:33:10) 
+[GCC 12.3.0] on linux
+```
+
+2. Install rdkit and biopython
+```
+conda install conda-forge::rdkit
+pip install biopython pandas
+```
+
+3. Install torch by using pip.
+Because conda is likely to install multiple version of torch, there might have errors like [pytorch_scatter](https://github.com/rusty1s/pytorch_scatter/issues/248), [pytorch_geometric](https://github.com/pyg-team/pytorch_geometric/issues/3836), [pytorch_geometric](https://github.com/pyg-team/pytorch_geometric/issues/999), [stackoverflow](https://stackoverflow.com/questions/69952475/how-to-solve-the-pytorch-geometric-install-error-undefined-symbol-zn5torch3ji/78340193#78340193), [libcudart.so.11.0](https://github.com/pyg-team/pytorch_geometric/issues/1902), [Segmentation fault](https://github.com/gcorso/DiffDock/issues/171):
+```
+torch_sparse/_convert_cpu.so: undefined symbol: _ZNK2at6Tensor5zero_Ev
+torch_sparse/_version_cuda.so: undefined symbol: _ZN5torch3jit17parseSchemaOrNameERKSs
+torch_sparse/_version.so: undefined symbol: _ZN5torch3jit17parseSchemaOrNameERKSs
+OSError: libcudart.so.11.0: cannot open shared object file: No such file or directory 
+
+```
+
+Follow the [pytorch official guide](https://pytorch.org/get-started/locally/) for pytorch stable 2.2, Linux OS, Pip, Python, CUDA 12.1: 
+```
+pip install torch torchvision torchaudio
+```
+
+4. Install torch_geometric and its dependencies following [official guide](https://pytorch-geometric.readthedocs.io/en/latest/notes/installation.html). Please choose the informattion as Pytorch 2.2*, OS Linux, Pip, CUDA 12.1. You can access [the link](https://data.pyg.org/whl/index.html) to check available versions:
+```
+pip install torch_geometric
+pip install pyg_lib torch_scatter torch_sparse torch_cluster torch_spline_conv -f https://data.pyg.org/whl/torch-2.2.2+cu121.html
+```
+**Note**: In the furture, if there is a new version of pytorch, please update following commands to adapt to the changes. Ex: change https://data.pyg.org/whl/torch-2.2.0+cu121.html to https://data.pyg.org/whl/torch-2.2.2+cu121.html (if needed)
+
+5. Install [ProDy](http://prody.csb.pitt.edu/manual/getprody.html), [esm](https://github.com/facebookresearch/esm), [e3nn](https://github.com/e3nn/e3nn):
+```
+pip install prody 
+pip install fair-esm
+pip install e3nn
+```
+
 ### Docking Prediction  <a name="inference"></a>
 
 We support multiple input formats depending on whether you only want to make predictions for a single complex or for many at once.\
