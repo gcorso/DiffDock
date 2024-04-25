@@ -19,9 +19,9 @@ def _compose(r1, r2):  # R1 @ R2 but for Euler vecs
 
 
 def _expansion(omega, eps, L=2000):  # the summation term only
-    p = 0
-    for l in range(L):
-        p += (2 * l + 1) * np.exp(-l * (l + 1) * eps**2 / 2) * np.sin(omega * (l + 1 / 2)) / np.sin(omega / 2)
+    l = np.arange(L).reshape(-1, 1)
+    p = ((2 * l + 1) * np.exp(-l * (l + 1) * eps**2 / 2) 
+            * np.sin(omega * (l + 1 / 2)) / np.sin(omega / 2)).sum(0)
     return p
 
 
@@ -33,13 +33,12 @@ def _density(expansion, omega, marginal=True):  # if marginal, density over [0, 
 
 
 def _score(exp, omega, eps, L=2000):  # score of density over SO(3)
-    dSigma = 0
-    for l in range(L):
-        hi = np.sin(omega * (l + 1 / 2))
-        dhi = (l + 1 / 2) * np.cos(omega * (l + 1 / 2))
-        lo = np.sin(omega / 2)
-        dlo = 1 / 2 * np.cos(omega / 2)
-        dSigma += (2 * l + 1) * np.exp(-l * (l + 1) * eps**2 / 2) * (lo * dhi - hi * dlo) / lo ** 2
+    l = np.arange(L).reshape(-1, 1)
+    hi = np.sin((l + 1 / 2) * omega)
+    dhi = (l + 1 / 2) * np.cos((l + 1 / 2) * omega)
+    lo = np.sin(omega / 2)
+    dlo = 1 / 2 * np.cos(omega / 2)
+    dSigma = ((2 * l + 1) * np.exp(-l * (l + 1) * eps**2 / 2) * (lo * dhi - hi * dlo) / lo ** 2).sum(0)
     return dSigma / exp
 
 
