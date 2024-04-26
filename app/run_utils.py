@@ -44,7 +44,7 @@ def configure_logging(level=None):
     logging.basicConfig(
         level=level,
         format="[%(asctime)s] [%(filename)s:%(lineno)d] %(levelname)s - %(message)s",
-        datefmt="%Y-%m-%d %H:%M:%S",
+        datefmt="%Y-%m-%d %H:%M:%S %Z",
         handlers=[
             logging.StreamHandler(),  # Outputs logs to stderr by default
             # If you also want to log to a file, uncomment the following line:
@@ -93,8 +93,10 @@ def run_cli_command(
 
     assert len(args) == len(ARG_ORDER), f'Expected {len(ARG_ORDER)} arguments, got {len(args)}'
 
+    inference_log_level = os.environ.get("INFERENCE_LOG_LEVEL", os.environ.get("LOG_LEVEL", "WARNING"))
+
     all_arg_dict = {"protein_path": protein_path, "ligand": ligand, "config": config_path,
-                    "no_final_step_noise": True}
+                    "no_final_step_noise": True, "loglevel": inference_log_level}
     for arg_name, arg_val in zip(ARG_ORDER, args):
         all_arg_dict[arg_name] = arg_val
 
@@ -136,12 +138,18 @@ def run_cli_command(
                     capture_output=True,
                 )
                 logging.debug(f"Command output:\n{result.stdout}")
+                full_output = f"Standard out:\n{result.stdout}"
                 if result.stderr:
                     # Skip progress bar lines
                     stderr_lines = result.stderr.split("\n")
                     stderr_lines = filter(lambda x: "%|" not in x, stderr_lines)
                     stderr_text = "\n".join(stderr_lines)
                     logging.error(f"Command error:\n{stderr_text}")
+                    full_output += f"\nStandard error:\n{stderr_text}"
+
+                with open(f"{temp_dir_path}/output.log", "w") as log_file:
+                    log_file.write(full_output)
+
             else:
                 logging.debug("Skipping command execution")
                 artificial_output_dir = os.path.join(TEMP_DIR, "artificial_output")
