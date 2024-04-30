@@ -332,8 +332,12 @@ def get_lig_graph_with_matching(mol_, complex_graph, popsize, maxiter, matching,
                 positions.append(conf.GetPositions())
             complex_graph['ligand'].orig_pos = np.asarray(positions) if len(positions) > 1 else positions[0]
 
-        rotable_bonds = get_torsion_angles(mol_maybe_noh)
-        #if not rotable_bonds: print("no_rotable_bonds but still using it")
+        # rotatable_bonds = get_torsion_angles(mol_maybe_noh)
+        _tmp = copy.deepcopy(mol_)
+        if remove_hs:
+            _tmp = RemoveHs(_tmp, sanitize=True)
+        _tmp = AllChem.RemoveAllHs(_tmp)
+        rotatable_bonds = get_torsion_angles(_tmp)
 
         for i in range(num_conformers):
             mols, rmsds = [], []
@@ -347,8 +351,8 @@ def get_lig_graph_with_matching(mol_, complex_graph, popsize, maxiter, matching,
                     mol_rdkit = RemoveHs(mol_rdkit, sanitize=True)
                 mol_rdkit = AllChem.RemoveAllHs(mol_rdkit)
                 mol = AllChem.RemoveAllHs(copy.deepcopy(mol_maybe_noh))
-                if rotable_bonds and not skip_matching:
-                    optimize_rotatable_bonds(mol_rdkit, mol, rotable_bonds, popsize=popsize, maxiter=maxiter)
+                if rotatable_bonds and not skip_matching:
+                    optimize_rotatable_bonds(mol_rdkit, mol, rotatable_bonds, popsize=popsize, maxiter=maxiter)
                 mol.AddConformer(mol_rdkit.GetConformer())
                 rms_list = []
                 AllChem.AlignMolConformers(mol, RMSlist=rms_list)

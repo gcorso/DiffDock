@@ -35,7 +35,8 @@ else:
     p_ = p(x, sigma[:, None], N=100)
     np.save('.p.npy', p_)
 
-    score_ = grad(x, sigma[:, None], N=100) / p_
+    eps = np.finfo(p_.dtype).eps
+    score_ = grad(x, sigma[:, None], N=100) / (p_ + eps)
     np.save('.score.npy', score_)
 
 

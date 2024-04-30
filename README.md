@@ -74,10 +74,29 @@ current repo
 
 To set up an appropriate environment, navigate to the root of the repository and run the following commands:
 
-    conda env create --file environment.yml
+    conda create --file environment.yml
     conda activate diffdock
 
 See [conda documentation](https://conda.io/projects/conda/en/latest/commands/env/create.html) for more information.
+
+### Using a Docker container
+
+A Dockerfile is provided for building a container:
+
+    docker build -f Dockerfile -t diffdock
+
+Alternatively, you can use a pre-built container to run the code.
+First, download the container from Docker Hub:
+
+    docker pull rbgcsail/diffdock
+
+Then, run the container:
+
+    docker run -it --entrypoint /bin/bash rbgcsail/diffdock
+    # Inside the container
+    micromamba activate diffdock
+
+You can now run the code as described below.
 
 ### Docking Prediction  <a name="inference"></a>
 

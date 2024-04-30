@@ -21,17 +21,17 @@ def SetDihedral(conf, atom_idx, new_vale):
     rdMolTransforms.SetDihedralRad(conf, atom_idx[0], atom_idx[1], atom_idx[2], atom_idx[3], new_vale)
 
 
-def apply_changes(mol, values, rotable_bonds, conf_id):
+def apply_changes(mol, values, rotatable_bonds, conf_id):
     opt_mol = copy.copy(mol)
-    [SetDihedral(opt_mol.GetConformer(conf_id), rotable_bonds[r], values[r]) for r in range(len(rotable_bonds))]
+    [SetDihedral(opt_mol.GetConformer(conf_id), rotatable_bonds[r], values[r]) for r in range(len(rotatable_bonds))]
     return opt_mol
 
 
-def optimize_rotatable_bonds(mol, true_mol, rotable_bonds, probe_id=-1, ref_id=-1, seed=0, popsize=15, maxiter=500,
+def optimize_rotatable_bonds(mol, true_mol, rotatable_bonds, probe_id=-1, ref_id=-1, seed=0, popsize=15, maxiter=500,
                              mutation=(0.5, 1), recombination=0.8):
-    opt = OptimizeConformer(mol, true_mol, rotable_bonds, seed=seed, probe_id=probe_id, ref_id=ref_id)
-    max_bound = [np.pi] * len(opt.rotable_bonds)
-    min_bound = [-np.pi] * len(opt.rotable_bonds)
+    opt = OptimizeConformer(mol, true_mol, rotatable_bonds, seed=seed, probe_id=probe_id, ref_id=ref_id)
+    max_bound = [np.pi] * len(opt.rotatable_bonds)
+    min_bound = [-np.pi] * len(opt.rotatable_bonds)
     bounds = (min_bound, max_bound)
     bounds = list(zip(bounds[0], bounds[1]))
 
@@ -39,24 +39,24 @@ def optimize_rotatable_bonds(mol, true_mol, rotable_bonds, probe_id=-1, ref_id=-
     result = differential_evolution(opt.score_conformation, bounds,
                                     maxiter=maxiter, popsize=popsize,
                                     mutation=mutation, recombination=recombination, disp=False, seed=seed)
-    opt_mol = apply_changes(opt.mol, result['x'], opt.rotable_bonds, conf_id=probe_id)
+    opt_mol = apply_changes(opt.mol, result['x'], opt.rotatable_bonds, conf_id=probe_id)
 
     return opt_mol
 
 
 class OptimizeConformer:
-    def __init__(self, mol, true_mol, rotable_bonds, probe_id=-1, ref_id=-1, seed=None):
+    def __init__(self, mol, true_mol, rotatable_bonds, probe_id=-1, ref_id=-1, seed=None):
         super(OptimizeConformer, self).__init__()
         if seed:
             np.random.seed(seed)
-        self.rotable_bonds = rotable_bonds
+        self.rotatable_bonds = rotatable_bonds
         self.mol = mol
         self.true_mol = true_mol
         self.probe_id = probe_id
         self.ref_id = ref_id
 
     def score_conformation(self, values):
-        for i, r in enumerate(self.rotable_bonds):
+        for i, r in enumerate(self.rotatable_bonds):
             SetDihedral(self.mol.GetConformer(self.probe_id), r, values[i])
         return AllChem.AlignMol(self.mol, self.true_mol, self.probe_id, self.ref_id)
 

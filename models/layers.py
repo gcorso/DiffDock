@@ -6,6 +6,7 @@ ACTIVATIONS = {
     'silu': nn.SiLU
 }
 
+
 def FCBlock(in_dim, hidden_dim, out_dim, layers, dropout, activation='relu'):
     activation = ACTIVATIONS[activation]
     assert layers >= 2
@@ -29,10 +30,20 @@ class GaussianSmearing(torch.nn.Module):
         return torch.exp(self.coeff * torch.pow(dist, 2))
 
 
-
 class AtomEncoder(torch.nn.Module):
     def __init__(self, emb_dim, feature_dims, sigma_embed_dim, lm_embedding_dim=0):
-        # first element of feature_dims tuple is a list with the lenght of each categorical feature and the second is the number of scalar features
+        """
+
+        Parameters
+        ----------
+        emb_dim
+        feature_dims
+            first element of feature_dims tuple is a list with the length of each categorical feature,
+            and the second is the number of scalar features
+        sigma_embed_dim
+        lm_embedding_dim
+        """
+        #
         super(AtomEncoder, self).__init__()
         self.atom_embedding_list = torch.nn.ModuleList()
         self.num_categorical_features = len(feature_dims[0])
@@ -58,8 +69,19 @@ class AtomEncoder(torch.nn.Module):
 
 class OldAtomEncoder(torch.nn.Module):
 
-    def __init__(self, emb_dim, feature_dims, sigma_embed_dim, lm_embedding_type= None):
-        # first element of feature_dims tuple is a list with the lenght of each categorical feature and the second is the number of scalar features
+    def __init__(self, emb_dim, feature_dims, sigma_embed_dim, lm_embedding_type=None):
+        """
+
+        Parameters
+        ----------
+        emb_dim
+        feature_dims
+            first element of feature_dims tuple is a list with the length of each categorical feature,
+            and the second is the number of scalar features
+        sigma_embed_dim
+        lm_embedding_type
+        """
+        #
         super(OldAtomEncoder, self).__init__()
         self.atom_embedding_list = torch.nn.ModuleList()
         self.num_categorical_features = len(feature_dims[0])
