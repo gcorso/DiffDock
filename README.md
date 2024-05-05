@@ -74,7 +74,7 @@ current repo
 
 To set up an appropriate environment, navigate to the root of the repository and run the following commands:
 
-    conda create --file environment.yml
+    conda env create --file environment.yml
     conda activate diffdock
 
 See [conda documentation](https://conda.io/projects/conda/en/latest/commands/env/create.html) for more information.
