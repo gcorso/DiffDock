@@ -8,6 +8,8 @@ channels:
 dependencies:
   - python=3.9.18
   - pip
+  # Need older setuptools for openfold
+  - setuptools=69.5.1
   # Need to install torch in order to build openfold, so install it first
   - pip:
     - --extra-index-url https://download.pytorch.org/whl/cu117
