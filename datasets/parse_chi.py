@@ -61,7 +61,7 @@ def batch_compute_dihedral_angles(sidechains):
 
 def get_coords(prody_pdb):
     resindices = sorted(set(prody_pdb.ca.getResindices()))
-    coords = np.zeros((len(resindices), 14, 3))
+    coords = np.full((len(resindices), 14, 3), np.nan)
     for i, resind in enumerate(resindices):
         sel = prody_pdb.select(f'resindex {resind}')
         resname = sel.getResnames()[0]
