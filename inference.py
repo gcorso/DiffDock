@@ -299,7 +299,7 @@ def main(args):
                         visualization_list[batch_idx].write(os.path.join(write_dir, f'rank{rank+1}_reverseprocess.pdb'))
 
         except Exception as e:
-            logger.warning("Failed on", orig_complex_graph["name"], e)
+            logger.warning(f"Failed on {orig_complex_graph['name']}: {e}")
             failures += 1
 
     result_msg = f"""
