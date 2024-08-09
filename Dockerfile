@@ -19,7 +19,7 @@ ENV PATH=$HOME/bin:$HOME/.local/bin:$PATH
 
 # Copy and create Conda environment
 ENV ENV_FILE_NAME=environment.yml
-COPY --chown=$APPUSER:$APPUSER ./$ENV_FILE_NAME .
+COPY --chown=$APPUSER:$APPUSER $ENV_FILE_NAME .
 RUN ~/bin/micromamba env create --file $ENV_FILE_NAME && ~/bin/micromamba clean -afy --quiet
 
 # Copy application code
