@@ -25,7 +25,6 @@ dependencies:
     - openfold @ git+https://github.com/aqlaboratory/openfold.git@4b41059694619831a7db195b7e0988fc4ff3a307
     - pandas==1.5.1
     - prody==2.2.0
-    - prody==2.2.0
     - pybind11==2.11.1
     - pytorch-lightning==1.9.5
     - rdkit==2022.03.3
