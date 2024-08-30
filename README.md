@@ -90,10 +90,20 @@ First, download the container from Docker Hub:
 
     docker pull rbgcsail/diffdock
 
+Check if you have a GPU available
+
+    docker run --rm --gpus all nvidia/cuda:11.7.1-devel-ubuntu22.04 nvidia-smi
+
 Then, run the container:
 
-    docker run -it --entrypoint /bin/bash rbgcsail/diffdock
-    # Inside the container
+    docker run -it --gpus all --entrypoint /bin/bash rbgcsail/diffdock 
+
+If you don't have a GPU, run (it will be significantly slower):
+    
+    docker run -it --entrypoint /bin/bash rbgcsail/diffdock 
+
+Inside the container
+
     micromamba activate diffdock
 
 You can now run the code as described below.
