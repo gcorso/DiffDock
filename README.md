@@ -83,7 +83,7 @@ See [conda documentation](https://conda.io/projects/conda/en/latest/commands/env
 
 A Dockerfile is provided for building a container:
 
-    docker build -f Dockerfile -t diffdock
+    docker build . -f Dockerfile -t diffdock
 
 Alternatively, you can use a pre-built container to run the code.
 First, download the container from Docker Hub:
