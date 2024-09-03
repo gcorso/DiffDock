@@ -1,7 +1,7 @@
 # Stage 1: Build Environment Setup
-FROM nvidia/cuda:11.7.1-devel-ubuntu22.04 as builder
+FROM nvidia/cuda:11.7.1-devel-ubuntu22.04 AS builder
 
-RUN apt-get update -y && apt-get install -y wget curl git tar bzip2 unzip && rm -rf /var/lib/apt/lists/*
+RUN apt-get update -y && apt-get install -y gcc wget curl git tar bzip2 unzip && rm -rf /var/lib/apt/lists/*
 
 # Create a user
 ENV APPUSER="appuser"
@@ -24,12 +24,6 @@ RUN ~/bin/micromamba env create --file $ENV_FILE_NAME && ~/bin/micromamba clean 
 
 # Copy application code
 COPY --chown=$APPUSER:$APPUSER . $HOME/$DIR_NAME
-
-# Download models
-# These should download automatically on first inference
-# RUN curl -L -o diffdock_models_v1.1.zip "https://www.dropbox.com/scl/fi/drg90rst8uhd2633tyou0/diffdock_models.zip?rlkey=afzq4kuqor2jb8adah41ro2lz&dl=1" \
-#     && mkdir -p $HOME/$DIR_NAME/workdir \
-#     && unzip diffdock_models_v1.1.zip -d $HOME/$DIR_NAME/workdir
 
 
 # Stage 2: Runtime Environment
