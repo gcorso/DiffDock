@@ -1,5 +1,4 @@
 # DiffDock: Diffusion Steps, Twists, and Turns for Molecular Docking
-[![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/diffdock-diffusion-steps-twists-and-turns-for/blind-docking-on-pdbbind)](https://paperswithcode.com/sota/blind-docking-on-pdbbind?p=diffdock-diffusion-steps-twists-and-turns-for)
 [![Open in HuggingFace](https://huggingface.co/datasets/huggingface/badges/raw/main/open-in-hf-spaces-sm.svg)](https://huggingface.co/spaces/reginabarzilaygroup/DiffDock-Web)
 
 
@@ -8,8 +7,8 @@
 ### [Original paper on arXiv](https://arxiv.org/abs/2210.01776)
 
 Implementation of DiffDock, state-of-the-art method for molecular docking, by Gabriele Corso*, Hannes Stark*, Bowen Jing*, Regina Barzilay and Tommi Jaakkola.
-This repository contains code and instructions to run the method. 
-If you have any question, feel free to open an issue or reach out to us: [gcorso@mit.edu](gcorso@mit.edu), [hstark@mit.edu](hstark@mit.edu), [bjing@mit.edu](bjing@mit.edu).
+This repository contains code and instructions to run the method. Since 2024, Jacob Silterra has been leading the effort to maintain and improve the code.
+If you have any question, feel free to open an issue or reach out to us: [gcorso@mit.edu](gcorso@mit.edu) and [silterra@mit.edu](silterra@mit.edu).
 
 **Update February 2024:** We have released DiffDock-L, a new version of DiffDock that provides a significant improvement in performance and generalization capacity (see the description of the new version in [our new paper](https://arxiv.org/abs/2402.18396)). By default the repository now runs the new model, please use GitHub commit history to run the original DiffDock model. Further we now provide instructions for Docker and to set up your own local UI interface.
 
