@@ -76,6 +76,14 @@ To set up an appropriate environment, navigate to the root of the repository and
     conda env create --file environment.yml
     conda activate diffdock
 
+Alternatively, the environment can be set up manually:
+
+    conda env create -n diffdock -c conda-forge -c pytorch -c nvidia -c pyg python=3.9.18 pip python-devtools setuptools=69.5.1 prody=2.2.0 scipy=1.12.0 pytorch==1.13.1 torchvision==0.14.1 torchaudio==0.13.1 pytorch-cuda=11.7 pandas=1.5.1 scikit-learn=1.1.0 networkx=2.8.4 requests rdkit=2022.03.3 e3nn=0.5.1 pybind11=2.11.1 pyg=2.2.0 pytorch-spline-conv=1.2.1 torchmetrics=0.11.0 gradio=3.50
+    conda activate diffdock
+    pip install pytorch-lightning==1.9.5 fair-esm[esmfold]==2.0.0
+    pip install dllogger@git+https://github.com/NVIDIA/dllogger.git
+    pip install openfold@git+https://github.com/aqlaboratory/openfold.git@cf177c0c4a19bec0c380ff9758a18061c3248f85
+
 See [conda documentation](https://conda.io/projects/conda/en/latest/commands/env/create.html) for more information.
 
 ### Using a Docker container
