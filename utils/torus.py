@@ -7,6 +7,8 @@ import os
     cached to memory, therefore the precomputation is only run the first time the repository is run on a machine
 """
 
+# Get the directory where this script is located for absolute paths
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 
 def p(x, sigma, N=10):
     p_ = 0
@@ -28,16 +30,22 @@ SIGMA_MIN, SIGMA_MAX, SIGMA_N = 3e-3, 2, 5000  # relative to pi
 x = 10 ** np.linspace(np.log10(X_MIN), 0, X_N + 1) * np.pi
 sigma = 10 ** np.linspace(np.log10(SIGMA_MIN), np.log10(SIGMA_MAX), SIGMA_N + 1) * np.pi
 
-if os.path.exists('.p.npy'):
-    p_ = np.load('.p.npy')
-    score_ = np.load('.score.npy')
+# Use absolute paths for cache files
+p_cache_file = os.path.join(SCRIPT_DIR, '.p.npy')
+score_cache_file = os.path.join(SCRIPT_DIR, '.score.npy')
+
+if os.path.exists(p_cache_file) and os.path.exists(score_cache_file):
+    p_ = np.load(p_cache_file)
+    score_ = np.load(score_cache_file)
 else:
+    print(f"Cache files not found. Computing and saving to {SCRIPT_DIR}")
     p_ = p(x, sigma[:, None], N=100)
-    np.save('.p.npy', p_)
+    np.save(p_cache_file, p_)
 
     eps = np.finfo(p_.dtype).eps
     score_ = grad(x, sigma[:, None], N=100) / (p_ + eps)
-    np.save('.score.npy', score_)
+    np.save(score_cache_file, score_)
+    print(f"Cache files created successfully at {SCRIPT_DIR}")
 
 
 def score(x, sigma):
