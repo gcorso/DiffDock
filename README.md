@@ -80,12 +80,12 @@ See [conda documentation](https://conda.io/projects/conda/en/latest/commands/env
 
 ### Using a Docker container
 
-A Dockerfile is provided for building a container:
+A Dockerfile is provided for building an image:
 
     docker build . -f Dockerfile -t diffdock
 
-Alternatively, you can use a pre-built container to run the code.
-First, download the container from Docker Hub:
+Alternatively, you can use a pre-built image to run the code.
+First, download the image from Docker Hub:
 
     docker pull rbgcsail/diffdock
 
@@ -93,7 +93,7 @@ Check if you have a GPU available
 
     docker run --rm --gpus all nvidia/cuda:11.7.1-devel-ubuntu22.04 nvidia-smi
 
-Then, run the container:
+Then, run the image to build the container:
 
     docker run -it --gpus all --entrypoint /bin/bash rbgcsail/diffdock 
 
