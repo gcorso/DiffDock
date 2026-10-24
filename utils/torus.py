@@ -1,6 +1,7 @@
 import numpy as np
 import tqdm
 import os
+import warnings
 
 """
     Preprocessing for the SO(2)/torus sampling and score computations, truncated infinite series are computed and then
@@ -28,16 +29,33 @@ SIGMA_MIN, SIGMA_MAX, SIGMA_N = 3e-3, 2, 5000  # relative to pi
 x = 10 ** np.linspace(np.log10(X_MIN), 0, X_N + 1) * np.pi
 sigma = 10 ** np.linspace(np.log10(SIGMA_MIN), np.log10(SIGMA_MAX), SIGMA_N + 1) * np.pi
 
-if os.path.exists('.p.npy'):
-    p_ = np.load('.p.npy')
-    score_ = np.load('.score.npy')
+# the cache is stored next to this file (or in $DIFFDOCK_CACHE_DIR) rather than in the current
+# working directory, which is not necessarily writable
+CACHE_DIR = os.environ.get('DIFFDOCK_CACHE_DIR', os.path.dirname(os.path.abspath(__file__)))
+
+
+def _cache_path(name):
+    return os.path.join(CACHE_DIR, name)
+
+
+def _save_cache(name, array):
+    try:
+        np.save(_cache_path(name), array)
+    except OSError as e:
+        warnings.warn(f'Could not write the torus cache to {CACHE_DIR} ({e}), it will be recomputed on the next run. '
+                      f'Set DIFFDOCK_CACHE_DIR to a writable directory to avoid this.')
+
+
+if os.path.exists(_cache_path('.p.npy')) and os.path.exists(_cache_path('.score.npy')):
+    p_ = np.load(_cache_path('.p.npy'))
+    score_ = np.load(_cache_path('.score.npy'))
 else:
     p_ = p(x, sigma[:, None], N=100)
-    np.save('.p.npy', p_)
+    _save_cache('.p.npy', p_)
 
     eps = np.finfo(p_.dtype).eps
     score_ = grad(x, sigma[:, None], N=100) / (p_ + eps)
-    np.save('.score.npy', score_)
+    _save_cache('.score.npy', score_)
 
 
 def score(x, sigma):

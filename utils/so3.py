@@ -1,4 +1,5 @@
 import os
+import warnings
 import numpy as np
 import torch
 from scipy.spatial.transform import Rotation
@@ -42,11 +43,28 @@ def _score(exp, omega, eps, L=2000):  # score of density over SO(3)
     return dSigma / exp
 
 
-if os.path.exists('.so3_omegas_array4.npy'):
-    _omegas_array = np.load('.so3_omegas_array4.npy')
-    _cdf_vals = np.load('.so3_cdf_vals4.npy')
-    _score_norms = np.load('.so3_score_norms4.npy')
-    _exp_score_norms = np.load('.so3_exp_score_norms4.npy')
+# the cache is stored next to this file (or in $DIFFDOCK_CACHE_DIR) rather than in the current
+# working directory, which is not necessarily writable
+CACHE_DIR = os.environ.get('DIFFDOCK_CACHE_DIR', os.path.dirname(os.path.abspath(__file__)))
+
+
+def _cache_path(name):
+    return os.path.join(CACHE_DIR, name)
+
+
+def _save_cache(name, array):
+    try:
+        np.save(_cache_path(name), array)
+    except OSError as e:
+        warnings.warn(f'Could not write the SO(3) cache to {CACHE_DIR} ({e}), it will be recomputed on the next run. '
+                      f'Set DIFFDOCK_CACHE_DIR to a writable directory to avoid this.')
+
+
+if os.path.exists(_cache_path('.so3_omegas_array4.npy')):
+    _omegas_array = np.load(_cache_path('.so3_omegas_array4.npy'))
+    _cdf_vals = np.load(_cache_path('.so3_cdf_vals4.npy'))
+    _score_norms = np.load(_cache_path('.so3_score_norms4.npy'))
+    _exp_score_norms = np.load(_cache_path('.so3_exp_score_norms4.npy'))
 else:
     _eps_array = 10 ** np.linspace(np.log10(MIN_EPS), np.log10(MAX_EPS), N_EPS)
     _omegas_array = np.linspace(0, np.pi, X_N + 1)[1:]
@@ -58,10 +76,10 @@ else:
 
     _exp_score_norms = np.sqrt(np.sum(_score_norms**2 * _pdf_vals, axis=1) / np.sum(_pdf_vals, axis=1) / np.pi)
 
-    np.save('.so3_omegas_array4.npy', _omegas_array)
-    np.save('.so3_cdf_vals4.npy', _cdf_vals)
-    np.save('.so3_score_norms4.npy', _score_norms)
-    np.save('.so3_exp_score_norms4.npy', _exp_score_norms)
+    _save_cache('.so3_omegas_array4.npy', _omegas_array)
+    _save_cache('.so3_cdf_vals4.npy', _cdf_vals)
+    _save_cache('.so3_score_norms4.npy', _score_norms)
+    _save_cache('.so3_exp_score_norms4.npy', _exp_score_norms)
 
 
 def sample(eps):
